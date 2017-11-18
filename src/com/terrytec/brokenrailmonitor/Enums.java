@@ -7,7 +7,7 @@ public class Enums extends Object {
 	}
 
 	public enum CommandType {
-		RequestConfig(0xA0), AssignClientID(0xA1);
+		RequestConfig(0xA0), AssignClientID(0xA1), UploadConfig(0xA2);
 
 		private int value;
 
@@ -19,17 +19,19 @@ public class Enums extends Object {
 		public int getValue() {
 			return value;
 		}
-		
-		public static CommandType valueOf(int value) {    //    手写的从int到enum的转换函数
-	        switch (value) {
-	        case 0xA0:
-	            return RequestConfig;
-	        case 0xA1:
-	            return AssignClientID;
-	        default:
-	            return null;
-	        }
-	    }
+
+		public static CommandType valueOf(int value) { // 手写的从int到enum的转换函数
+			switch (value) {
+			case 0xA0:
+				return RequestConfig;
+			case 0xA1:
+				return AssignClientID;
+			case 0xA2:
+				return UploadConfig;
+			default:
+				return null;
+			}
+		}
 	}
 
 	public enum DataLevel {
