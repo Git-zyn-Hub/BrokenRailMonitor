@@ -176,6 +176,8 @@ public class CommandFragment extends Fragment {
 				return "为手机用户ID赋值" + data[4];
 			case RequestConfig:
 				return "请求终端配置文件";
+			case UploadConfig:
+				return "上传终端配置文件";
 			default:
 				return null;
 			}

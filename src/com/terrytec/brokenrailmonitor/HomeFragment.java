@@ -1,5 +1,7 @@
 package com.terrytec.brokenrailmonitor;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -40,6 +42,7 @@ public class HomeFragment extends Fragment {
 	private final int CONNECTED = 1;
 	private final int SEND = 2;
 	private final int RECEIVEFILE = 3;
+	private final int SENDFILE = 4;
 	public List<TerminalAnd2Rails> terminalAnd2Rails;
 	private View vTabHome;
 	private static final String ServerIP = "103.44.145.248";
@@ -99,6 +102,12 @@ public class HomeFragment extends Fragment {
 						Log.e("zhenji", "清空视图");
 					}
 				}
+				Button btnEdit = ctbHomeTitle.getTitleBarRightBtn();
+				String strButtonEdit = btnEdit.getText().toString();
+				if (strButtonEdit.equals("编辑"))
+					btnEdit.setText("退出");
+				else if (strButtonEdit.equals("退出"))
+					btnEdit.setText("编辑");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -226,20 +235,32 @@ public class HomeFragment extends Fragment {
 
 		@Override
 		public void onClick(View v) {
-			String path = MainActivity.getMainActivity().getFilesDir().toString();
+			// String path =
+			// MainActivity.getMainActivity().getFilesDir().toString();
+			//
+			// Toast.makeText(MainActivity.getMainActivity(), path,
+			// Toast.LENGTH_LONG).show();
+			//
+			// hitCount++;
+			// if (terminalAnd2Rails.size() > 0) {
+			// if (hitCount % 2 == 0) {
+			// terminalAnd2Rails.get(0).changeLeftRailNormal();
+			// terminalAnd2Rails.get(0).setAccessPointConnect();
+			// } else {
+			// terminalAnd2Rails.get(0).changeLeftRailError();
+			// terminalAnd2Rails.get(0).setAccessPointNotConnect();
+			// }
+			// }
 
-			Toast.makeText(MainActivity.getMainActivity(), path, Toast.LENGTH_LONG).show();
-
-			hitCount++;
-			if (terminalAnd2Rails.size() > 0) {
-				if (hitCount % 2 == 0) {
-					terminalAnd2Rails.get(0).changeLeftRailNormal();
-					terminalAnd2Rails.get(0).setAccessPointConnect();
-				} else {
-					terminalAnd2Rails.get(0).changeLeftRailError();
-					terminalAnd2Rails.get(0).setAccessPointNotConnect();
-				}
+			if (!isConnect) {
+				Toast.makeText(MainActivity.getMainActivity(), "请先连接！", Toast.LENGTH_LONG).show();
+				return;
 			}
+
+			sendBytesBuffer = SendDataPackage.PackageSendData((byte) MainActivity.getMainActivity().ClientID,
+					(byte) 0xff, (byte) CommandType.UploadConfig.getValue(), new byte[0]);
+			new Thread(sendBytesThread).start();
+			new Thread(fileUploadThread).start();
 		}
 	};
 
@@ -282,6 +303,42 @@ public class HomeFragment extends Fragment {
 					e.printStackTrace();
 				}
 				new Thread(new FileServer(fileSocket)).start();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+	};
+
+	Runnable fileUploadThread = new Runnable() {
+
+		@Override
+		public void run() {
+
+			Socket data;
+			try {
+				data = new Socket(ServerIP, fileReceivePort);
+				OutputStream outputData = data.getOutputStream();
+				FileInputStream fileInput;
+				try {
+					fileInput = new FileInputStream(MainActivity.getMainActivity().getFilesDir() + "/config.xml");
+					int size = -1;
+					byte[] buffer = new byte[1024];
+					while ((size = fileInput.read(buffer, 0, 1024)) != -1) {
+						outputData.write(buffer, 0, size);
+					}
+					outputData.close();
+					fileInput.close();
+					data.close();
+
+					Message msg = new Message();
+					msg.what = SENDFILE;
+					myHandler.sendMessage(msg);
+
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+			} catch (UnknownHostException e1) {
+				e1.printStackTrace();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
@@ -364,7 +421,17 @@ public class HomeFragment extends Fragment {
 				} else if (msg.what == CONNECTED) {
 					ctbHomeTitle.getTitleBarLeftBtn().setText("已连接");
 				} else if (msg.what == RECEIVEFILE) {
-					freshDevices();
+					try {
+						freshDevices();
+						((CommandFragment) MainActivity.getMainActivity().commandFragment)
+								.AddCmdMsg("终端配置文件完成接收".getBytes(), DataLevel.Normal);
+					} catch (Exception e) {
+						((CommandFragment) MainActivity.getMainActivity().commandFragment)
+								.AddCmdMsg("配置文件接收异常！".getBytes(), DataLevel.Error);
+					}
+				} else if (msg.what == SENDFILE) {
+					((CommandFragment) MainActivity.getMainActivity().commandFragment)
+							.AddCmdMsg("终端配置文件发送成功".getBytes(), DataLevel.Normal);
 				}
 			}
 		};
