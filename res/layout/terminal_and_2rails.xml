@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llTerminalAnd2Rails"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:id="@+id/llAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btnAdd"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/button_add"
+            android:text="@string/add"
+            android:textSize="12sp"
+            android:visibility="invisible" >
+        </Button>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llLeftRails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:layout_marginTop="0dp"
+        android:orientation="horizontal" >
+
+        <com.terrytec.brokenrailmonitor.Rail
+            android:id="@+id/railLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+        </com.terrytec.brokenrailmonitor.Rail>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llTerminal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/ivAccessPoint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="-13dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:background="#00000000"
+            android:contentDescription="@string/description"
+            android:src="@drawable/connect_error"
+            android:visibility="invisible" />
+
+        <com.terrytec.brokenrailmonitor.Terminal
+            android:id="@+id/terminal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="0dp"
+            android:gravity="center" >
+        </com.terrytec.brokenrailmonitor.Terminal>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llRightRails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:layout_marginTop="0dp"
+        android:orientation="horizontal" >
+
+        <com.terrytec.brokenrailmonitor.Rail
+            android:id="@+id/railRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+        </com.terrytec.brokenrailmonitor.Rail>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btnDelete"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/button_add"
+            android:padding="0dp"
+            android:text="@string/delete"
+            android:textSize="14sp"
+            android:visibility="invisible" >
+        </Button>
+    </LinearLayout>
+
+</LinearLayout>

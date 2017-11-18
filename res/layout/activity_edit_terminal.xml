@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:title="http://schemas.android.com/apk/res/com.terrytec.brokenrailmonitor"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <com.terrytec.brokenrailmonitor.CustomTitleBar
+        android:id="@+id/ctbEditTerminal"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center"
+        title:left_button_visible="true"
+        title:right_button_text="@string/save"
+        title:title_background_color="@color/systemcolor"
+        title:title_text="@string/edit"
+        title:title_text_color="@color/white" >
+    </com.terrytec.brokenrailmonitor.CustomTitleBar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+  		android:layout_gravity="top"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="top"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tvNeighbourSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginTop="7dp"
+                android:text="@string/neighbourSmall" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/tvTerminalNo"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="@string/terminalNo" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/tvNeighbourBig"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="@string/neighbourBig" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/tvIs4G"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="@string/is4G" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/tvIsEnd"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="@string/isEnd" >
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="top"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/etNeighbourSmall"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:textSize="15sp"
+                android:inputType="number" >
+            </EditText>
+
+            <EditText
+                android:id="@+id/etTerminalNo"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:textSize="15sp"
+                android:inputType="number" >
+            </EditText>
+
+            <EditText
+                android:id="@+id/etNeighbourBig"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:textSize="15sp"
+                android:inputType="number" >
+            </EditText>
+
+            <RadioGroup
+                android:id="@+id/rgIs4G"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/rbYes4G"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="@string/yes" >
+                </RadioButton>
+
+                <RadioButton
+                    android:id="@+id/rbNo4G"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:checked="true"
+                    android:text="@string/no" >
+                </RadioButton>
+            </RadioGroup>
+
+            <RadioGroup
+                android:id="@+id/rgIsEnd"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/rbYesEnd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="@string/yes" >
+                </RadioButton>
+
+                <RadioButton
+                    android:id="@+id/rbNoEnd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:checked="true"
+                    android:text="@string/no" >
+                </RadioButton>
+            </RadioGroup>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

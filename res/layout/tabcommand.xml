@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:title="http://schemas.android.com/apk/res/com.terrytec.brokenrailmonitor"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <com.terrytec.brokenrailmonitor.CustomTitleBar
+        android:id="@+id/ctbCommandTitle"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center"
+        title:left_button_text="@string/clear"
+        title:left_button_text_color="@color/white"
+        title:left_button_visible="true"
+        title:right_button_text="@string/fix"
+        title:right_button_text_color="@color/white"
+        title:right_button_visible="true"
+        title:title_background_color="@color/systemcolor"
+        title:title_text="@string/command"
+        title:title_text_color="@color/white" >
+    </com.terrytec.brokenrailmonitor.CustomTitleBar>
+
+    <ScrollView
+        android:id="@+id/scvCommand"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:gravity="center" >
+
+        <LinearLayout
+            android:id="@+id/llCommandContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

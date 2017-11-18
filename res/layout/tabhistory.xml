@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   	xmlns:title="http://schemas.android.com/apk/res/com.terrytec.brokenrailmonitor"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <com.terrytec.brokenrailmonitor.CustomTitleBar
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center"
+        title:title_background_color="@color/systemcolor"
+        title:left_button_visible="false"
+        title:title_text="@string/history"
+        title:title_text_color="@color/white"
+        >
+        
+    </com.terrytec.brokenrailmonitor.CustomTitleBar>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/history"
+        android:textSize="30sp">
+        
+    </TextView>
+</LinearLayout>

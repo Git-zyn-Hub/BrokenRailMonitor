@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">断轨监视</string>
+    <string name="home">主页</string>
+    <string name="command">指令</string>
+    <string name="history">历史</string>
+    <string name="description">图片</string>
+    <string name="connect">连接</string>
+    <string name="edit">编辑</string>
+    <string name="save">保存</string>
+    <string name="neighbourSmall">相邻小终端</string>
+    <string name="terminalNo">终端号</string>
+    <string name="neighbourBig">相邻大终端</string>
+    <string name="is4G">是否4G</string>
+    <string name="isEnd">是否最终点</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="add">+</string>
+    <string name="delete">-</string>
+    <string name="rails">铁轨</string>
+    <string name="upload">上传</string>
+    <string name="download">下载</string>
+    <string name="clear">清空</string>
+    <string name="fix">固定</string>
+
+</resources>
