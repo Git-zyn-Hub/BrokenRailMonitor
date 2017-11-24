@@ -60,15 +60,15 @@ public class TerminalAnd2Rails extends RelativeLayout {
 		setIs4G(t.is4G);
 		setIsEnd(t.isEnd);
 	}
-	
+
 	public void setAccessPointConnect() {
-		if (ivAccessPoint!=null) {
+		if (ivAccessPoint != null) {
 			ivAccessPoint.setImageResource(R.drawable.connect_normal);
 		}
 	}
-	
+
 	public void setAccessPointNotConnect() {
-		if (ivAccessPoint!=null) {
+		if (ivAccessPoint != null) {
 			ivAccessPoint.setImageResource(R.drawable.connect_error);
 		}
 	}
@@ -100,6 +100,13 @@ public class TerminalAnd2Rails extends RelativeLayout {
 		isEnd = bool;
 	}
 
+	public void setRailsGone() {
+		Rail leftRail = (Rail) this.findViewById(R.id.railLeft);
+		Rail rightRail = (Rail) this.findViewById(R.id.railRight);
+
+		leftRail.setVisibility(View.GONE);
+		rightRail.setVisibility(View.GONE);
+	}
 	// @Override
 	// public int describeContents() {
 	// // TODO Auto-generated method stub

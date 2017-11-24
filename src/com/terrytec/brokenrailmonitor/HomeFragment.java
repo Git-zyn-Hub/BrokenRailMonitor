@@ -139,6 +139,13 @@ public class HomeFragment extends Fragment {
 		btnDownload.setVisibility(View.INVISIBLE);
 	}
 
+	private void setBtnEditText2Edit() {
+		if (ctbHomeTitle != null) {
+			Button btnEdit = ctbHomeTitle.getTitleBarRightBtn();
+			btnEdit.setText("编辑");
+		}
+	}
+
 	private OnClickListener btnAddListener = new OnClickListener() {
 
 		@Override
@@ -461,7 +468,13 @@ public class HomeFragment extends Fragment {
 					// 初始化宽高属性,此处单位为px
 					LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
 							ViewGroup.LayoutParams.WRAP_CONTENT);
-
+					int index = terminalAnd2Rails.indexOf(tAnd2R);
+					if (index != 0) {
+						lp.setMargins(0, -85, 0, 0);
+					}
+					if (index == terminalAnd2Rails.size() - 1) {
+						tAnd2R.setRailsGone();
+					}
 					llContainer.addView(tAnd2R, lp);// 动态改变布局
 					tAnd2R.setVisibility(View.VISIBLE);// 此处需要设置布局显示，否则会不显示
 
@@ -476,6 +489,7 @@ public class HomeFragment extends Fragment {
 			creatUniqueAddButton(llContainer, btnAddLastListener, false);
 		}
 		invisibleUpDownLoadBtn();
+		setBtnEditText2Edit();
 	}
 
 	private void creatUniqueAddButton(LinearLayout llContainer, OnClickListener listener, Boolean isVisible) {
