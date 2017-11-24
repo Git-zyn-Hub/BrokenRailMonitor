@@ -268,6 +268,12 @@ public class HomeFragment extends Fragment {
 					(byte) 0xff, (byte) CommandType.UploadConfig.getValue(), new byte[0]);
 			new Thread(sendBytesThread).start();
 			new Thread(fileUploadThread).start();
+			
+
+			sendBytesBuffer = SendDataPackage.PackageSendData((byte) MainActivity.getMainActivity().ClientID,
+					(byte) 0xff, (byte) CommandType.UploadConfig.getValue(), new byte[0]);
+			new Thread(sendBytesThread).start();
+			new Thread(fileUploadThread).start();
 		}
 	};
 
@@ -310,6 +316,42 @@ public class HomeFragment extends Fragment {
 					e.printStackTrace();
 				}
 				new Thread(new FileServer(fileSocket)).start();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+	};
+	
+	Runnable fileUploadThread=new Runnable() {
+		
+		@Override
+		public void run() {
+
+			Socket data;
+			try {
+				data = new Socket(ServerIP, fileReceivePort);
+	            OutputStream outputData = data.getOutputStream();
+	            FileInputStream fileInput;
+				try {
+					fileInput = new FileInputStream(MainActivity.getMainActivity().getFilesDir()+"/config.xml");
+		            int size = -1;
+		            byte[] buffer = new byte[1024];
+		            while((size = fileInput.read(buffer, 0, 1024)) != -1){
+		                outputData.write(buffer, 0, size);
+		            }
+		            outputData.close();
+		            fileInput.close();
+		            data.close();
+
+					Message msg = new Message();
+					msg.what = SENDFILE;
+					myHandler.sendMessage(msg);
+					
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+			} catch (UnknownHostException e1) {
+				e1.printStackTrace();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
@@ -439,6 +481,9 @@ public class HomeFragment extends Fragment {
 				} else if (msg.what == SENDFILE) {
 					((CommandFragment) MainActivity.getMainActivity().commandFragment)
 							.AddCmdMsg("终端配置文件发送成功".getBytes(), DataLevel.Normal);
+				}else  if (msg.what == SENDFILE) {
+					((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg("终端配置文件发送成功".getBytes(),
+							DataLevel.Normal);
 				}
 			}
 		};
