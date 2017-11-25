@@ -23,5 +23,9 @@
     <string name="download">下载</string>
     <string name="clear">清空</string>
     <string name="fix">固定</string>
+    <string name="ConfigInitialInfo">初始信息配置</string>
+    <string name="ReadPointInfo">读取单点配置信息</string>
+    <string name="GetPointRailInfo">获取单点铁轨信息</string>
+    <string name="GetHistory">获取历史</string>
 
 </resources>

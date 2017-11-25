@@ -34,8 +34,8 @@ public class TerminalAnd2Rails extends RelativeLayout {
 		}
 	}
 
-	private OnClickListener btnTerminalListener=new OnClickListener() {
-		
+	private OnClickListener btnTerminalListener = new OnClickListener() {
+
 		@Override
 		public void onClick(View v) {
 			try {
@@ -44,7 +44,7 @@ public class TerminalAnd2Rails extends RelativeLayout {
 
 				// 设置页面转向
 				intent.setClass(MainActivity.getMainActivity(), TerminalCmdActivity.class);
-				intent.putExtra("terminalNo", terminalNo);
+				intent.putExtra("terminalNo", String.valueOf(terminalNo));
 				// 设置传递参数
 				MainActivity.getMainActivity().startActivity(intent);// 不需要接收返回值时使用
 			} catch (Exception e) {
@@ -52,6 +52,7 @@ public class TerminalAnd2Rails extends RelativeLayout {
 			}
 		}
 	};
+
 	// public TerminalAnd2Rails(Parcel in) {
 	// super(MainActivity.getMainActivity().getBaseContext());
 	// this.terminalNo = in.readInt();

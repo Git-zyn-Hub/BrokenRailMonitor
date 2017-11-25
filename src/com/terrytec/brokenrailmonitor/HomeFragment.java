@@ -268,12 +268,6 @@ public class HomeFragment extends Fragment {
 					(byte) 0xff, (byte) CommandType.UploadConfig.getValue(), new byte[0]);
 			new Thread(sendBytesThread).start();
 			new Thread(fileUploadThread).start();
-			
-
-			sendBytesBuffer = SendDataPackage.PackageSendData((byte) MainActivity.getMainActivity().ClientID,
-					(byte) 0xff, (byte) CommandType.UploadConfig.getValue(), new byte[0]);
-			new Thread(sendBytesThread).start();
-			new Thread(fileUploadThread).start();
 		}
 	};
 
