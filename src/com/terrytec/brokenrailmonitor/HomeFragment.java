@@ -358,42 +358,6 @@ public class HomeFragment extends Fragment {
 		}
 	};
 
-	Runnable fileUploadThread = new Runnable() {
-
-		@Override
-		public void run() {
-
-			Socket data;
-			try {
-				data = new Socket(ServerIP, fileReceivePort);
-				OutputStream outputData = data.getOutputStream();
-				FileInputStream fileInput;
-				try {
-					fileInput = new FileInputStream(MainActivity.getMainActivity().getFilesDir() + "/config.xml");
-					int size = -1;
-					byte[] buffer = new byte[1024];
-					while ((size = fileInput.read(buffer, 0, 1024)) != -1) {
-						outputData.write(buffer, 0, size);
-					}
-					outputData.close();
-					fileInput.close();
-					data.close();
-
-					Message msg = new Message();
-					msg.what = SENDFILE;
-					myHandler.sendMessage(msg);
-
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
-			} catch (UnknownHostException e1) {
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-		}
-	};
-
 	// 连接到服务器的接口
 	Runnable connectThread = new Runnable() {
 

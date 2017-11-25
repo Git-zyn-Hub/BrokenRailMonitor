@@ -1,11 +1,14 @@
 package com.terrytec.brokenrailmonitor;
 
+import com.terrytec.brokenrailmonitor.classes.DensityUtil;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 public class TerminalAnd2Rails extends RelativeLayout {
@@ -106,6 +109,24 @@ public class TerminalAnd2Rails extends RelativeLayout {
 
 		leftRail.setVisibility(View.GONE);
 		rightRail.setVisibility(View.GONE);
+
+		setAddDeleteBtnMargin();
+	}
+
+	public void setAddDeleteBtnMargin() {
+		Button btnAdd = (Button) this.findViewById(R.id.btnAdd);
+		Button btnDelete = (Button) this.findViewById(R.id.btnDelete);
+
+		if (btnAdd != null && btnDelete != null) {
+			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) btnAdd.getLayoutParams();
+			layoutParams.setMargins(0, 0, DensityUtil.dip2px(MainActivity.getMainActivity(), 15), 0);
+			btnAdd.setLayoutParams(layoutParams);
+
+			LinearLayout.LayoutParams layoutParamsDelete = (LinearLayout.LayoutParams) btnDelete.getLayoutParams();
+			layoutParamsDelete.setMargins(DensityUtil.dip2px(MainActivity.getMainActivity(), 15), 
+					DensityUtil.dip2px(MainActivity.getMainActivity(), 18), 0, 0);
+			btnDelete.setLayoutParams(layoutParamsDelete);
+		}
 	}
 	// @Override
 	// public int describeContents() {
