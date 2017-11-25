@@ -3,6 +3,7 @@ package com.terrytec.brokenrailmonitor;
 import com.terrytec.brokenrailmonitor.classes.DensityUtil;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,8 +27,31 @@ public class TerminalAnd2Rails extends RelativeLayout {
 	public TerminalAnd2Rails(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		LayoutInflater.from(context).inflate(R.layout.terminal_and_2rails, this, true);
+
+		Button btnTerminal = (Button) this.findViewById(R.id.btnTerminal);
+		if (btnTerminal != null) {
+			btnTerminal.setOnClickListener(btnTerminalListener);
+		}
 	}
 
+	private OnClickListener btnTerminalListener=new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			try {
+				// Intent是系统各组件之间进行数据传递的数据负载者，即通信使者
+				Intent intent = new Intent();
+
+				// 设置页面转向
+				intent.setClass(MainActivity.getMainActivity(), TerminalCmdActivity.class);
+				intent.putExtra("terminalNo", terminalNo);
+				// 设置传递参数
+				MainActivity.getMainActivity().startActivity(intent);// 不需要接收返回值时使用
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	};
 	// public TerminalAnd2Rails(Parcel in) {
 	// super(MainActivity.getMainActivity().getBaseContext());
 	// this.terminalNo = in.readInt();
@@ -123,7 +147,7 @@ public class TerminalAnd2Rails extends RelativeLayout {
 			btnAdd.setLayoutParams(layoutParams);
 
 			LinearLayout.LayoutParams layoutParamsDelete = (LinearLayout.LayoutParams) btnDelete.getLayoutParams();
-			layoutParamsDelete.setMargins(DensityUtil.dip2px(MainActivity.getMainActivity(), 15), 
+			layoutParamsDelete.setMargins(DensityUtil.dip2px(MainActivity.getMainActivity(), 15),
 					DensityUtil.dip2px(MainActivity.getMainActivity(), 18), 0, 0);
 			btnDelete.setLayoutParams(layoutParamsDelete);
 		}

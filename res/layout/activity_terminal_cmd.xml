@@ -1,0 +1,19 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:title="http://schemas.android.com/apk/res/com.terrytec.brokenrailmonitor"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <com.terrytec.brokenrailmonitor.CustomTitleBar
+        android:id="@+id/ctbTerminalCmdTitle"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center"
+        title:left_button_visible="true"
+        title:right_button_visible="false"
+        title:title_background_color="@color/systemcolor"
+        title:title_text_color="@color/white" >
+    </com.terrytec.brokenrailmonitor.CustomTitleBar>
+
+</RelativeLayout>
