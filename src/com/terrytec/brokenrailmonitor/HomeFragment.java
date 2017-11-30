@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 //import android.widget.Toast;
 import android.view.View.OnClickListener;
@@ -59,7 +60,7 @@ public class HomeFragment extends Fragment {
 	private CustomTitleBar ctbHomeTitle;
 	private Button btnUpload;
 	private Button btnDownload;
-	private byte[] sendBytesBuffer;
+	public byte[] sendBytesBuffer;
 	// 本页面传递时的按钮btn的标志码
 	// private final static int request_Code = 11;
 	private OnClickListener btnEditListener = new OnClickListener() {
@@ -315,32 +316,32 @@ public class HomeFragment extends Fragment {
 			}
 		}
 	};
-	
-	Runnable fileUploadThread=new Runnable() {
-		
+
+	Runnable fileUploadThread = new Runnable() {
+
 		@Override
 		public void run() {
 
 			Socket data;
 			try {
 				data = new Socket(ServerIP, fileReceivePort);
-	            OutputStream outputData = data.getOutputStream();
-	            FileInputStream fileInput;
+				OutputStream outputData = data.getOutputStream();
+				FileInputStream fileInput;
 				try {
-					fileInput = new FileInputStream(MainActivity.getMainActivity().getFilesDir()+"/config.xml");
-		            int size = -1;
-		            byte[] buffer = new byte[1024];
-		            while((size = fileInput.read(buffer, 0, 1024)) != -1){
-		                outputData.write(buffer, 0, size);
-		            }
-		            outputData.close();
-		            fileInput.close();
-		            data.close();
+					fileInput = new FileInputStream(MainActivity.getMainActivity().getFilesDir() + "/config.xml");
+					int size = -1;
+					byte[] buffer = new byte[1024];
+					while ((size = fileInput.read(buffer, 0, 1024)) != -1) {
+						outputData.write(buffer, 0, size);
+					}
+					outputData.close();
+					fileInput.close();
+					data.close();
 
 					Message msg = new Message();
 					msg.what = SENDFILE;
 					myHandler.sendMessage(msg);
-					
+
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -402,8 +403,12 @@ public class HomeFragment extends Fragment {
 								switch (CommandType.valueOf(receivedBytes[5] & 0xFF)) {
 								case AssignClientID:
 									MainActivity.getMainActivity().ClientID = receivedBytes[4];
+									TextView tvClientID = (TextView) vTabHome.findViewById(R.id.tvClientID);
+									tvClientID.setText(String.valueOf(receivedBytes[4]));
 									break;
 								case RequestConfig:
+								case ReadPointInfo:
+
 								default:
 									break;
 								}
@@ -439,9 +444,6 @@ public class HomeFragment extends Fragment {
 				} else if (msg.what == SENDFILE) {
 					((CommandFragment) MainActivity.getMainActivity().commandFragment)
 							.AddCmdMsg("终端配置文件发送成功".getBytes(), DataLevel.Normal);
-				}else  if (msg.what == SENDFILE) {
-					((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg("终端配置文件发送成功".getBytes(),
-							DataLevel.Normal);
 				}
 			}
 		};
@@ -568,7 +570,7 @@ public class HomeFragment extends Fragment {
 		}
 	};
 
-	Runnable sendBytesThread = new Runnable() {
+	public Runnable sendBytesThread = new Runnable() {
 
 		@Override
 		public void run() {
@@ -650,5 +652,9 @@ public class HomeFragment extends Fragment {
 			i++;
 		}
 		return -1;
+	}
+
+	public Boolean getIsConnect() {
+		return isConnect;
 	}
 }

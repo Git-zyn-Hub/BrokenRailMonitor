@@ -7,7 +7,7 @@ public class Enums extends Object {
 	}
 
 	public enum CommandType {
-		RequestConfig(0xA0), AssignClientID(0xA1), UploadConfig(0xA2);
+		RequestConfig(0xA0), AssignClientID(0xA1), UploadConfig(0xA2), ReadPointInfo(0xF1),GetPointRailInfo(0xF5);
 
 		private int value;
 
@@ -28,6 +28,10 @@ public class Enums extends Object {
 				return AssignClientID;
 			case 0xA2:
 				return UploadConfig;
+			case 0xF1:
+				return ReadPointInfo;
+			case 0xF5:
+				return GetPointRailInfo;
 			default:
 				return null;
 			}

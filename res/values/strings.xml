@@ -27,5 +27,6 @@
     <string name="ReadPointInfo">读取单点配置信息</string>
     <string name="GetPointRailInfo">获取单点铁轨信息</string>
     <string name="GetHistory">获取历史</string>
+    <string name="zero">0</string>
 
 </resources>

@@ -178,6 +178,10 @@ public class CommandFragment extends Fragment {
 				return "请求终端配置文件";
 			case UploadConfig:
 				return "上传终端配置文件";
+			case ReadPointInfo:
+				return "读取单点配置信息";
+			case GetPointRailInfo:
+				return "获取单点铁轨信息";
 			default:
 				return null;
 			}

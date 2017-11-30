@@ -1,9 +1,15 @@
 package com.terrytec.brokenrailmonitor;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
+import com.terrytec.brokenrailmonitor.Enums.DataLevel;
 import com.terrytec.brokenrailmonitor.classes.DensityUtil;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +20,7 @@ import android.widget.RelativeLayout;
 
 public class TerminalAnd2Rails extends RelativeLayout {
 
-	// private static final long serialVersionUID = 1L;
+	private final int ACCESS_POINT_CONNECT_TIMEOUT = 0;
 	public int terminalNo;
 	public int neighbourSmall;
 	public int neighbourBig;
@@ -23,6 +29,20 @@ public class TerminalAnd2Rails extends RelativeLayout {
 
 	public Button btnTerminal;
 	public ImageView ivAccessPoint;
+
+	// private Boolean timerIsRunning = false;
+	private Timer timer = new Timer();
+	private MyTimerTask task;
+	Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			if (msg.what == ACCESS_POINT_CONNECT_TIMEOUT) {
+				((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg(
+						("超过2分钟没有收到终端" + String.valueOf(terminalNo) + "的心跳包，它可能已经下线").getBytes(), DataLevel.Error);
+				setAccessPointNotConnect();
+			}
+		}
+	};
 
 	public TerminalAnd2Rails(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -91,12 +111,31 @@ public class TerminalAnd2Rails extends RelativeLayout {
 
 	public void setAccessPointConnect() {
 		if (ivAccessPoint != null) {
+			if (timer != null) {
+				if (task != null)
+					task.cancel(); // 将原任务从队列中移除
+				task = new MyTimerTask(); // 新建一个任务
+				timer.schedule(task, 125000);
+			}
+			// else if (timer != null) {
+			// timer.schedule(task, 120000);
+			// timerIsRunning = true;
+			// } else {
+			// timer = new Timer();
+			// timer.schedule(task, 120000);
+			// timerIsRunning = true;
+			// }
 			ivAccessPoint.setImageResource(R.drawable.connect_normal);
 		}
 	}
 
 	public void setAccessPointNotConnect() {
 		if (ivAccessPoint != null) {
+			if (timer != null) {
+				if (task != null)
+					task.cancel();
+				// timerIsRunning = false;
+			}
 			ivAccessPoint.setImageResource(R.drawable.connect_error);
 		}
 	}
@@ -153,9 +192,9 @@ public class TerminalAnd2Rails extends RelativeLayout {
 			btnDelete.setLayoutParams(layoutParamsDelete);
 		}
 	}
+
 	// @Override
 	// public int describeContents() {
-	// // TODO Auto-generated method stub
 	// return 0;
 	// }
 	//
@@ -180,4 +219,12 @@ public class TerminalAnd2Rails extends RelativeLayout {
 	// dest.writeString(String.valueOf(this.is4G));
 	// dest.writeString(String.valueOf(this.isEnd));
 	// }
+	class MyTimerTask extends TimerTask {
+		@Override
+		public void run() {
+			Message message = new Message();
+			message.what = ACCESS_POINT_CONNECT_TIMEOUT;
+			handler.sendMessage(message);
+		}
+	}
 }

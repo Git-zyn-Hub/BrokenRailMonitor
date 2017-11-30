@@ -30,48 +30,66 @@
 	</LinearLayout>
     -->
 
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="top"
-        android:gravity="center" >
+        android:layout_height="match_parent" >
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvClientID"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/client_id_background"
             android:gravity="center"
-            android:orientation="horizontal" >
+            android:padding="0dp"
+            android:text="@string/zero"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" >
+        </TextView>
 
-            <Button
-                android:id="@+id/btnUpload"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:layout_margin="8dp"
-                android:background="@drawable/button_background"
-                android:text="@string/upload"
-                android:visibility="invisible" >
-            </Button>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="top"
+            android:gravity="center" >
 
             <LinearLayout
-                android:id="@+id/llTerminalAndRailsContainer"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="vertical" >
-            </LinearLayout>
+                android:orientation="horizontal" >
 
-            <Button
-                android:id="@+id/btnDownload"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:layout_margin="8dp"
-                android:background="@drawable/button_background"
-                android:text="@string/download"
-                android:visibility="invisible" >
-            </Button>
-        </LinearLayout>
-    </ScrollView>
+                <Button
+                    android:id="@+id/btnUpload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/button_background"
+                    android:text="@string/upload"
+                    android:visibility="invisible" >
+                </Button>
+
+                <LinearLayout
+                    android:id="@+id/llTerminalAndRailsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical" >
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnDownload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/button_background"
+                    android:text="@string/download"
+                    android:visibility="invisible" >
+                </Button>
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
 
 </LinearLayout>

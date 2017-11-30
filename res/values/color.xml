@@ -19,5 +19,6 @@
     <color name="systemcolor">#ff0E6DB0</color>
     <color name="orange">#ffffa500</color>
     <color name="buttoncolor">#ff0E8DB0</color>
+    <color name="clientidcolor">#ff0088ff</color>
 
 </resources>
