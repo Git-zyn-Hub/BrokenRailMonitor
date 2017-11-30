@@ -424,6 +424,8 @@ public class HomeFragment extends Fragment {
 						} else if (receivedBytes.length == 0) {
 							Toast.makeText(MainActivity.getMainActivity(), "与服务器断开连接！", Toast.LENGTH_LONG).show();
 							ctbHomeTitle.getTitleBarLeftBtn().setText("连接");
+							TextView tvClientID = (TextView) vTabHome.findViewById(R.id.tvClientID);
+							tvClientID.setText("0");
 						}
 						((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg(receivedBytes,
 								DataLevel.Default);
