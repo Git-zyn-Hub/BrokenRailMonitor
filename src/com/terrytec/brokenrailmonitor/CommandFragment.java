@@ -17,6 +17,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 public class CommandFragment extends Fragment {
@@ -102,7 +103,7 @@ public class CommandFragment extends Fragment {
 		String str = null;
 		String msg = null;
 		if (data.length > 1) {
-			if (data[0] == 0x55 && (data[1] & 0xFF) == 0xAA)
+			if ((data[0] == 0x55 && (data[1] & 0xFF) == 0xAA) || (data[0] == 0x66 && (data[1] & 0xFF) == 0xCC))
 				str = bytesToHexString(data, data.length);
 			else {
 				try {
@@ -112,6 +113,7 @@ public class CommandFragment extends Fragment {
 				}
 			}
 			msg = getMsg(str_time, str, getMsgInfo(data));
+			level = getDataLevel(data);
 		} else if (data.length == 0) {
 			msg = getMsg(str_time, "与服务器断开连接！", null);
 			level = DataLevel.Error;
@@ -169,8 +171,8 @@ public class CommandFragment extends Fragment {
 	}
 
 	private String getMsgInfo(byte[] data) {
-		if (data[0] == 0x55 && (data[1] & 0xFF) == 0xAA) {
 
+		if (data.length > 6 && data[0] == 0x55 && (data[1] & 0xFF) == 0xAA) {
 			switch (CommandType.valueOf(data[5] & 0xFF)) {
 			case AssignClientID:
 				return "为手机用户ID赋值" + data[4];
@@ -182,11 +184,136 @@ public class CommandFragment extends Fragment {
 				return "读取单点配置信息";
 			case GetPointRailInfo:
 				return "获取单点铁轨信息";
+			case ConfigInitialInfo:
+				return "初始信息配置";
+			case ThresholdSetting:
+				return "设置门限";
+			case GetHistory:
+				return "获取历史信息";
+			case ImmediatelyRespond:
+				return "立即响应";
+			case RealTimeConfig:
+				return "实时时钟配置";
+			case GetOneSectionInfo:
+				return "获取某段铁轨信息";
+			case EraseFlash:
+				return "擦除flash";
+			case ErrorReport:
+				return "";
+			default:
+				return null;
+			}
+		} else if (data.length > 7 && data[0] == 0x66 && (data[1] & 0xFF) == 0xCC) {
+			switch (CommandType.valueOf(data[6] & 0xFF)) {
+			case AssignClientID:
+				return "为手机用户ID赋值" + data[4];
+			case RequestConfig:
+				return "请求终端配置文件";
+			case UploadConfig:
+				return "上传终端配置文件";
+			case ReadPointInfo:
+				return "读取单点配置信息";
+			case GetPointRailInfo:
+				return "获取单点铁轨信息";
+			case ConfigInitialInfo:
+				return "初始信息配置";
+			case ThresholdSetting:
+				return "设置门限";
+			case GetHistory:
+				return "获取历史信息";
+			case ImmediatelyRespond:
+				switch (CommandType.valueOf(data[7] & 0xFF)) {
+				case ConfigInitialInfo:
+					return "初始信息配置指令，" + String.valueOf(data[4] & 0xFF) + "号4G终端已接收！";
+				case ReadPointInfo:
+					return "读取单点配置信息指令，" + String.valueOf(data[4] & 0xFF) + "号4G终端已接收！";
+				case ThresholdSetting:
+					return "设置门限指令，" + String.valueOf(data[4] & 0xFF) + "号4G终端已接收！";
+				case RealTimeConfig:
+					return "实时时钟配置指令，" + String.valueOf(data[4] & 0xFF) + "号4G终端已接收！";
+				case GetHistory:
+					return "获取Flash里存储的铁轨历史信息指令，" + String.valueOf(data[4] & 0xFF) + "号4G终端已接收！";
+				case GetPointRailInfo:
+					return "获取单点铁轨信息指令，" + String.valueOf(data[4] & 0xFF) + "号4G终端已接收！";
+				case EraseFlash:
+					return "擦除flash指令，" + String.valueOf(data[4] & 0xFF) + "号4G终端已接收！";
+				case GetOneSectionInfo:
+					return "获取某段铁轨信息，" + String.valueOf(data[4] & 0xFF) + "号4G终端已接收！";
+				default:
+					return "未知指令被接收！";
+				}
+			case RealTimeConfig:
+				return "实时时钟配置";
+			case GetOneSectionInfo:
+				return "获取某段铁轨信息";
+			case EraseFlash:
+				return "擦除flash";
+			case ErrorReport:
+				return String.valueOf(data[7] & 0xFF) + "号终端失联，未收到其返回的数据！";
 			default:
 				return null;
 			}
 		}
 		return null;
+	}
+
+	private DataLevel getDataLevel(byte[] data) {
+		if (data.length > 6 && data[0] == 0x55 && (data[1] & 0xFF) == 0xAA) {
+			switch (CommandType.valueOf(data[5] & 0xFF)) {
+			case AssignClientID:
+			case ImmediatelyRespond:
+				return DataLevel.Normal;
+			case RequestConfig:
+			case UploadConfig:
+			case ReadPointInfo:
+			case GetPointRailInfo:
+			case ConfigInitialInfo:
+			case ThresholdSetting:
+			case GetHistory:
+			case RealTimeConfig:
+			case GetOneSectionInfo:
+				return DataLevel.Default;
+			case EraseFlash:
+			case ErrorReport:
+				return DataLevel.Error;
+			default:
+				return DataLevel.Default;
+			}
+		} else if (data.length > 7 && data[0] == 0x66 && (data[1] & 0xFF) == 0xCC) {
+			switch (CommandType.valueOf(data[6] & 0xFF)) {
+			case AssignClientID:
+				return DataLevel.Normal;
+			case RequestConfig:
+			case UploadConfig:
+			case ReadPointInfo:
+			case GetPointRailInfo:
+			case ConfigInitialInfo:
+			case ThresholdSetting:
+			case GetHistory:
+			case RealTimeConfig:
+			case GetOneSectionInfo:
+				return DataLevel.Default;
+			case ImmediatelyRespond:
+				switch (CommandType.valueOf(data[7] & 0xFF)) {
+				case ConfigInitialInfo:
+				case ReadPointInfo:
+				case ThresholdSetting:
+				case RealTimeConfig:
+				case GetHistory:
+				case GetPointRailInfo:
+				case EraseFlash:
+				case GetOneSectionInfo:
+				default:
+					return DataLevel.Normal;
+				}
+			case EraseFlash:
+			case ErrorReport:
+				return DataLevel.Error;
+			default:
+				return DataLevel.Default;
+			}
+		}
+		return DataLevel.Default;
 	}
 
 	private void scrollControl() {
