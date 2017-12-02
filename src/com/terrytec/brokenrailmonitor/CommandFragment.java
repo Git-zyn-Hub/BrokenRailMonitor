@@ -113,7 +113,7 @@ public class CommandFragment extends Fragment {
 				}
 			}
 			msg = getMsg(str_time, str, getMsgInfo(data));
-			level = getDataLevel(data);
+			level = level == DataLevel.Default ? getDataLevel(data) : level;
 		} else if (data.length == 0) {
 			msg = getMsg(str_time, "与服务器断开连接！", null);
 			level = DataLevel.Error;

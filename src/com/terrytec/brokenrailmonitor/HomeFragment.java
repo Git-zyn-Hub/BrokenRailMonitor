@@ -426,6 +426,11 @@ public class HomeFragment extends Fragment {
 							ctbHomeTitle.getTitleBarLeftBtn().setText("Á¬½Ó");
 							TextView tvClientID = (TextView) vTabHome.findViewById(R.id.tvClientID);
 							tvClientID.setText("0");
+							if (terminalAnd2Rails!=null) {
+								for (TerminalAnd2Rails tAnd2R : terminalAnd2Rails) {
+									tAnd2R.setAccessPointNotConnect();
+								}
+							}
 						}
 						((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg(receivedBytes,
 								DataLevel.Default);
@@ -465,6 +470,11 @@ public class HomeFragment extends Fragment {
 	}
 
 	public void freshDevices() {
+		if (terminalAnd2Rails!=null) {
+			for (TerminalAnd2Rails tAnd2R : terminalAnd2Rails) {
+				tAnd2R.setAccessPointNotConnect();
+			}
+		}
 		FileOperate fileOperator = new FileOperate((MainActivity) getActivity());
 		terminalAnd2Rails = fileOperator.GetTerminalAnd2Rails();
 		LinearLayout llContainer = (LinearLayout) vTabHome.findViewById(R.id.llTerminalAndRailsContainer);
