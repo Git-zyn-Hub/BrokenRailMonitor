@@ -426,7 +426,7 @@ public class HomeFragment extends Fragment {
 							ctbHomeTitle.getTitleBarLeftBtn().setText("连接");
 							TextView tvClientID = (TextView) vTabHome.findViewById(R.id.tvClientID);
 							tvClientID.setText("0");
-							if (terminalAnd2Rails!=null) {
+							if (terminalAnd2Rails != null) {
 								for (TerminalAnd2Rails tAnd2R : terminalAnd2Rails) {
 									tAnd2R.setAccessPointNotConnect();
 								}
@@ -470,7 +470,7 @@ public class HomeFragment extends Fragment {
 	}
 
 	public void freshDevices() {
-		if (terminalAnd2Rails!=null) {
+		if (terminalAnd2Rails != null) {
 			for (TerminalAnd2Rails tAnd2R : terminalAnd2Rails) {
 				tAnd2R.setAccessPointNotConnect();
 			}
@@ -608,7 +608,9 @@ public class HomeFragment extends Fragment {
 	// 接收线程
 	private class ReceiveThread extends Thread {
 		private InputStream inStream = null;
-
+		private int accumulateNumber = 0;
+		private byte[] RememberBuffer;
+		private Boolean canMerge = false;
 		private byte[] buffer;
 		// private String str = null;
 
@@ -624,9 +626,23 @@ public class HomeFragment extends Fragment {
 		public void run() {
 			int count = 0;
 			while (isReceive) {
-				buffer = new byte[512];
+				buffer = new byte[1024];
 				try {
 					count = inStream.read(buffer);
+
+					if (Recognize1024(count)) {
+						RememberRecv(count);
+						canMerge = true;
+						Log.e("提示", "累积收到1024字节");
+						continue;
+					}
+					if (canMerge) {
+						MergeBuffer(count);
+						canMerge = false;
+						count = buffer.length;
+						Log.e("提示", "发生合并");
+					}
+
 					Message msg = new Message();
 					msg.what = RECEIVED;
 					msg.obj = getActualReceivedBytes(buffer, count);
@@ -639,6 +655,40 @@ public class HomeFragment extends Fragment {
 					e.printStackTrace();
 				}
 			}
+		}
+
+		private Boolean Recognize1024(int lengthOnce) {
+			// V519发满1024字节之后会截断一下，在下一个1024字节继续发送
+			//上一句不对，满1024字节截断可能是因为花生壳，因为不通过V519，只通过服务器和手机通信也会有这种情况。
+			// long beforePlusRemainder = accumulateNumber % 1024;
+			accumulateNumber += lengthOnce;
+			int afterPlusRemainder = accumulateNumber % 1024;
+			if (afterPlusRemainder == 0) {
+				// 等于0的时候说明接收的字段跨过1024字节，再收一组数据。
+				// 有一种特殊情况，就是收到1024字节的时候正好是一整包，这样进入判断的话就会将两个本来就应该分开的包连起来，这种情况没有处理。
+				return true;
+			}
+			return false;
+		}
+
+		public void RememberRecv(int length) {
+			RememberBuffer = new byte[length];
+			System.arraycopy(buffer, 0, RememberBuffer, 0, length);
+		}
+
+		public void MergeBuffer(int length2Merge) {
+			accumulateNumber = 0;
+			accumulateNumber += length2Merge;
+			byte[] secondReceive = new byte[length2Merge];
+			for (int i = 0; i < length2Merge; i++) {
+				secondReceive[i] = this.buffer[i];
+			}
+			byte[] sumReceive = new byte[RememberBuffer.length + length2Merge];
+			System.arraycopy(RememberBuffer, 0, sumReceive, 0, RememberBuffer.length);
+			System.arraycopy(secondReceive, 0, sumReceive, RememberBuffer.length, secondReceive.length);
+			buffer = new byte[sumReceive.length];
+			System.arraycopy(sumReceive, 0, buffer, 0, sumReceive.length);
+			RememberBuffer = null;
 		}
 	}
 
