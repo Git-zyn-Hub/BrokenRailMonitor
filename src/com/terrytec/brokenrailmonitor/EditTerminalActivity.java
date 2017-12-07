@@ -24,6 +24,11 @@ public class EditTerminalActivity extends Activity {
 	private FileOperate fileOperator;
 	private List<TerminalAnd2Rails> terminalAnd2Rails;
 	private int index;
+	private Boolean isTerminal = false;
+	private RadioButton is4GYes;
+	private RadioButton is4GNo;
+	private RadioButton isEndYes;
+	private RadioButton isEndNo;
 	// 此页面按钮btnButton的标志码
 	// public final static int result_Code = 1;
 
@@ -40,6 +45,11 @@ public class EditTerminalActivity extends Activity {
 			etNeighbourSmall = (EditText) findViewById(R.id.etNeighbourSmall);
 			etTerminalNo = (EditText) findViewById(R.id.etTerminalNo);
 			etNeighbourBig = (EditText) findViewById(R.id.etNeighbourBig);
+
+			is4GYes = (RadioButton) findViewById(R.id.rbYes4G);
+			is4GNo = (RadioButton) findViewById(R.id.rbNo4G);
+			isEndYes = (RadioButton) findViewById(R.id.rbYesEnd);
+			isEndNo = (RadioButton) findViewById(R.id.rbNoEnd);
 			setKnownInfo();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -51,21 +61,32 @@ public class EditTerminalActivity extends Activity {
 		Intent intent = getIntent();
 		// 获取该Intent所携带的数据
 		Bundle bundle = intent.getExtras();
-		// 从bundle数据包中取出数据
-		String str = bundle.getString("index");// getString()返回指定key的值
-		index = Integer.valueOf(str);
 		fileOperator = new FileOperate((MainActivity) MainActivity.getMainActivity());
 		terminalAnd2Rails = fileOperator.GetTerminalAnd2Rails();
-		if (index == 0 && terminalAnd2Rails.size() > 0) {
-			etNeighbourSmall.setText("0");
-			etNeighbourBig.setText(String.valueOf(terminalAnd2Rails.get(0).terminalNo));
-		} else if (index == 0) {
-			etNeighbourSmall.setText("0");
-		} else if (index == -2) {
-			etNeighbourSmall.setText(String.valueOf(terminalAnd2Rails.get(terminalAnd2Rails.size() - 1).terminalNo));
-		} else if (index != -1 && (terminalAnd2Rails.size() > 1)) {
-			etNeighbourSmall.setText(String.valueOf(terminalAnd2Rails.get(index - 1).terminalNo));
-			etNeighbourBig.setText(String.valueOf(terminalAnd2Rails.get(index).terminalNo));
+		// 从bundle数据包中取出数据
+		isTerminal = bundle.getBoolean("isTerminal");
+		String str = bundle.getString("index");// getString()返回指定key的值
+		index = Integer.valueOf(str);
+		if (isTerminal) {
+			TerminalAnd2Rails tAnd2R = terminalAnd2Rails.get(index);
+			etNeighbourSmall.setText(String.valueOf(tAnd2R.neighbourSmall));
+			etNeighbourBig.setText(String.valueOf(tAnd2R.neighbourBig));
+			etTerminalNo.setText(String.valueOf(tAnd2R.terminalNo));
+			setRadioButtonsState(is4GYes, is4GNo, tAnd2R.is4G);
+			setRadioButtonsState(isEndYes, isEndNo, tAnd2R.isEnd);
+		} else {
+			if (index == 0 && terminalAnd2Rails.size() > 0) {
+				etNeighbourSmall.setText("0");
+				etNeighbourBig.setText(String.valueOf(terminalAnd2Rails.get(0).terminalNo));
+			} else if (index == 0) {
+				etNeighbourSmall.setText("0");
+			} else if (index == -2) {
+				etNeighbourSmall
+						.setText(String.valueOf(terminalAnd2Rails.get(terminalAnd2Rails.size() - 1).terminalNo));
+			} else if (index != -1 && (terminalAnd2Rails.size() > 1)) {
+				etNeighbourSmall.setText(String.valueOf(terminalAnd2Rails.get(index - 1).terminalNo));
+				etNeighbourBig.setText(String.valueOf(terminalAnd2Rails.get(index).terminalNo));
+			}
 		}
 	}
 
@@ -109,19 +130,19 @@ public class EditTerminalActivity extends Activity {
 				oneTerminal.setNeighbourSmall(getIntFromEditText(etNeighbourSmall));
 				oneTerminal.setNeighbourBig(getIntFromEditText(etNeighbourBig));
 				// oneTerminal.setIs4G(getBooleanFromEditText());
-				RadioButton is4GYes = (RadioButton) findViewById(R.id.rbYes4G);
-				RadioButton is4GNo = (RadioButton) findViewById(R.id.rbNo4G);
-				RadioButton isEndYes = (RadioButton) findViewById(R.id.rbYesEnd);
-				RadioButton isEndNo = (RadioButton) findViewById(R.id.rbNoEnd);
 				oneTerminal.setIs4G(getBooleanFromRadioButtons(is4GYes, is4GNo));
 				oneTerminal.setIsEnd(getBooleanFromRadioButtons(isEndYes, isEndNo));
 				if (terminalAnd2Rails == null) {
 					terminalAnd2Rails = new ArrayList<TerminalAnd2Rails>();
 				}
-				if (index == -1 || index == -2)
-					terminalAnd2Rails.add(oneTerminal);
-				else
-					terminalAnd2Rails.add(index, oneTerminal);
+				if (isTerminal) {
+					terminalAnd2Rails.set(index, oneTerminal);
+				} else {
+					if (index == -1 || index == -2)
+						terminalAnd2Rails.add(oneTerminal);
+					else
+						terminalAnd2Rails.add(index, oneTerminal);
+				}
 
 				fileOperator.write(terminalAnd2Rails);
 
@@ -141,6 +162,15 @@ public class EditTerminalActivity extends Activity {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return -1;
+		}
+	}
+
+	private void setRadioButtonsState(RadioButton yes, RadioButton no, Boolean state) {
+		try {
+			yes.setChecked(state);
+			no.setChecked(!state);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

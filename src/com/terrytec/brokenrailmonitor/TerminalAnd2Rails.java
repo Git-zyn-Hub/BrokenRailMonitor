@@ -59,14 +59,28 @@ public class TerminalAnd2Rails extends RelativeLayout {
 		@Override
 		public void onClick(View v) {
 			try {
-				// Intent是系统各组件之间进行数据传递的数据负载者，即通信使者
-				Intent intent = new Intent();
+				HomeFragment homeFragment = (HomeFragment) MainActivity.getMainActivity().homeFragment;
+				if (homeFragment.getIsInEditMode()) {
+					// Intent是系统各组件之间进行数据传递的数据负载者，即通信使者
+					Intent intent = new Intent();
 
-				// 设置页面转向
-				intent.setClass(MainActivity.getMainActivity(), TerminalCmdActivity.class);
-				intent.putExtra("terminalNo", String.valueOf(terminalNo));
-				// 设置传递参数
-				MainActivity.getMainActivity().startActivity(intent);// 不需要接收返回值时使用
+					// 设置页面转向
+					intent.setClass(MainActivity.getMainActivity(), EditTerminalActivity.class);
+					intent.putExtra("isTerminal", true);
+					intent.putExtra("index", String.valueOf(homeFragment.FindMasterControlIndex(terminalNo)));
+					// 设置传递参数
+					MainActivity.getMainActivity().startActivity(intent);// 不需要接收返回值时使用
+				} else {
+					// Intent是系统各组件之间进行数据传递的数据负载者，即通信使者
+					Intent intent = new Intent();
+
+					// 设置页面转向
+					intent.setClass(MainActivity.getMainActivity(), TerminalCmdActivity.class);
+					intent.putExtra("terminalNo", String.valueOf(terminalNo));
+					// 设置传递参数
+					MainActivity.getMainActivity().startActivity(intent);// 不需要接收返回值时使用
+				}
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

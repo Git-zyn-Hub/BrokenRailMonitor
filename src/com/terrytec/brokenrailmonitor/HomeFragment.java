@@ -61,6 +61,7 @@ public class HomeFragment extends Fragment {
 	private Button btnUpload;
 	private Button btnDownload;
 	public byte[] sendBytesBuffer;
+	private Boolean isInEditMode = false;
 	// 本页面传递时的按钮btn的标志码
 	// private final static int request_Code = 11;
 	private OnClickListener btnEditListener = new OnClickListener() {
@@ -105,10 +106,13 @@ public class HomeFragment extends Fragment {
 				}
 				Button btnEdit = ctbHomeTitle.getTitleBarRightBtn();
 				String strButtonEdit = btnEdit.getText().toString();
-				if (strButtonEdit.equals("编辑"))
+				if (strButtonEdit.equals("编辑")) {
 					btnEdit.setText("退出");
-				else if (strButtonEdit.equals("退出"))
+					isInEditMode = true;
+				} else if (strButtonEdit.equals("退出")) {
 					btnEdit.setText("编辑");
+					isInEditMode = false;
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -144,6 +148,7 @@ public class HomeFragment extends Fragment {
 		if (ctbHomeTitle != null) {
 			Button btnEdit = ctbHomeTitle.getTitleBarRightBtn();
 			btnEdit.setText("编辑");
+			isInEditMode = false;
 		}
 	}
 
@@ -659,7 +664,7 @@ public class HomeFragment extends Fragment {
 
 		private Boolean Recognize1024(int lengthOnce) {
 			// V519发满1024字节之后会截断一下，在下一个1024字节继续发送
-			//上一句不对，满1024字节截断可能是因为花生壳，因为不通过V519，只通过服务器和手机通信也会有这种情况。
+			// 上一句不对，满1024字节截断可能是因为花生壳，因为不通过V519，只通过服务器和手机通信也会有这种情况。
 			// long beforePlusRemainder = accumulateNumber % 1024;
 			accumulateNumber += lengthOnce;
 			int afterPlusRemainder = accumulateNumber % 1024;
@@ -718,5 +723,9 @@ public class HomeFragment extends Fragment {
 
 	public Boolean getIsConnect() {
 		return isConnect;
+	}
+
+	public Boolean getIsInEditMode() {
+		return isInEditMode;
 	}
 }
