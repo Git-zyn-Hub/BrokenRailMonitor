@@ -728,4 +728,8 @@ public class HomeFragment extends Fragment {
 	public Boolean getIsInEditMode() {
 		return isInEditMode;
 	}
+	
+	public View getViewTabHome() {
+		return vTabHome;
+	}
 }

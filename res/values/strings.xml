@@ -28,5 +28,10 @@
     <string name="GetPointRailInfo">获取单点铁轨信息</string>
     <string name="GetHistory">获取历史</string>
     <string name="zero">0</string>
+    <string name="title_activity_popwindow_on_left">弹出窗口</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="pop_left">弹出左侧菜单</string>
+    <string name="open">打开</string>
+    <string name="close">关闭</string>
 
 </resources>

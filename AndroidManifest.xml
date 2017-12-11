@@ -32,6 +32,10 @@
             android:name=".TerminalCmdActivity"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name=".PopwindowOnLeftActivity"
+            android:label="@string/title_activity_popwindow_on_left" >
+        </activity>
     </application>
 
 </manifest>
