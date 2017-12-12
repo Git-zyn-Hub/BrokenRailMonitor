@@ -27,15 +27,19 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 //import android.widget.Toast;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 
 public class HomeFragment extends Fragment {
 
@@ -62,6 +66,9 @@ public class HomeFragment extends Fragment {
 	private Button btnDownload;
 	public byte[] sendBytesBuffer;
 	private Boolean isInEditMode = false;
+	// 声明PopupWindow对象的引用
+	private PopupWindow popupWindow;
+	private LayoutInflater inflaterGlobal;
 	// 本页面传递时的按钮btn的标志码
 	// private final static int request_Code = 11;
 	private OnClickListener btnEditListener = new OnClickListener() {
@@ -465,13 +472,103 @@ public class HomeFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.e("zyn", this.getClass().getName() + " onCreateView");
+		inflaterGlobal = inflater;
 		vTabHome = inflater.inflate(R.layout.tabhome, container, false);
 		btnUpload = (Button) vTabHome.findViewById(R.id.btnUpload);
 		btnDownload = (Button) vTabHome.findViewById(R.id.btnDownload);
 		btnUpload.setOnClickListener(btnUploadListener);
 		btnDownload.setOnClickListener(btnDownloadListener);
 		freshDevices();
+		// 点击按钮弹出菜单
+		Button pop = (Button) vTabHome.findViewById(R.id.btnPop);
+		pop.setOnClickListener(popClick);
 		return vTabHome;
+	}
+
+	// 点击弹出左侧菜单的显示方式
+	private OnClickListener popClick = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			getPopupWindow();
+			Log.e("TMD", "这是怎么回事？");
+			// 这里是位置显示方式,在按钮的左下角
+			// popupWindow.showAsDropDown(v);
+			// 这里可以尝试其它效果方式,如popupWindow.showAsDropDown(v,
+			// (screenWidth-dialgoWidth)/2, 0);
+			popupWindow.showAtLocation(vTabHome, Gravity.CENTER, 0, 0);
+		}
+	};
+
+	/***
+	 * 获取PopupWindow实例
+	 */
+	private void getPopupWindow() {
+		if (null != popupWindow) {
+			popupWindow.dismiss();
+			return;
+		} else {
+			initPopuptWindow();
+		}
+	}
+
+	/**
+	 * 创建PopupWindow
+	 */
+	protected void initPopuptWindow() {
+		// 获取自定义布局文件pop.xml的视图
+		View popupWindow_view = inflaterGlobal.inflate(R.layout.activity_popwindow, null, false);
+		// 创建PopupWindow实例,200,150分别是宽度和高度
+		popupWindow = new PopupWindow(popupWindow_view, 200, 150, true);
+//		popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+//		popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+//		popupWindow.setContentView(LayoutInflater.from(this).inflate(R.layout.layout_popupwindow_style01, null));
+		// 设置动画效果
+		popupWindow.setAnimationStyle(R.style.AnimationFade);
+		// 点击其他地方消失
+		popupWindow_view.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (popupWindow != null && popupWindow.isShowing()) {
+					popupWindow.dismiss();
+					popupWindow = null;
+				}
+				return false;
+			}
+		});
+
+		// pop.xml视图里面的控件
+		Button open = (Button) popupWindow_view.findViewById(R.id.open);
+		Button save = (Button) popupWindow_view.findViewById(R.id.save);
+		Button close = (Button) popupWindow_view.findViewById(R.id.close);
+		// pop.xml视图里面的控件触发的事件
+		// 打开
+		open.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// 这里可以执行相关操作
+				System.out.println("打开操作");
+				// 对话框消失
+				popupWindow.dismiss();
+			}
+		});
+		// 保存
+		save.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// 这里可以执行相关操作
+				System.out.println("保存操作");
+				popupWindow.dismiss();
+			}
+		});
+		// 关闭
+		close.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// 这里可以执行相关操作
+				System.out.println("关闭操作");
+				popupWindow.dismiss();
+			}
+		});
 	}
 
 	public void freshDevices() {
@@ -728,7 +825,7 @@ public class HomeFragment extends Fragment {
 	public Boolean getIsInEditMode() {
 		return isInEditMode;
 	}
-	
+
 	public View getViewTabHome() {
 		return vTabHome;
 	}
