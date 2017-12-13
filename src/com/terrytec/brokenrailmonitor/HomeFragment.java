@@ -69,6 +69,7 @@ public class HomeFragment extends Fragment {
 	// 声明PopupWindow对象的引用
 	private PopupWindow popupWindow;
 	private LayoutInflater inflaterGlobal;
+	private Button test;
 	// 本页面传递时的按钮btn的标志码
 	// private final static int request_Code = 11;
 	private OnClickListener btnEditListener = new OnClickListener() {
@@ -482,8 +483,19 @@ public class HomeFragment extends Fragment {
 		// 点击按钮弹出菜单
 		Button pop = (Button) vTabHome.findViewById(R.id.btnPop);
 		pop.setOnClickListener(popClick);
+		test = (Button) vTabHome.findViewById(R.id.btnTest);
+		test.setOnClickListener(testClick);
 		return vTabHome;
 	}
+
+	private View.OnClickListener testClick = new View.OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+
+			Toast.makeText(MainActivity.getMainActivity(), "test按钮被点击", Toast.LENGTH_LONG).show();
+		}
+	};
 
 	// 点击弹出左侧菜单的显示方式
 	private OnClickListener popClick = new OnClickListener() {
@@ -519,9 +531,10 @@ public class HomeFragment extends Fragment {
 		View popupWindow_view = inflaterGlobal.inflate(R.layout.activity_popwindow, null, false);
 		// 创建PopupWindow实例,200,150分别是宽度和高度
 		popupWindow = new PopupWindow(popupWindow_view, 200, 150, true);
-//		popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
-//		popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-//		popupWindow.setContentView(LayoutInflater.from(this).inflate(R.layout.layout_popupwindow_style01, null));
+		// popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+		// popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+		// popupWindow.setContentView(LayoutInflater.from(this).inflate(R.layout.layout_popupwindow_style01,
+		// null));
 		// 设置动画效果
 		popupWindow.setAnimationStyle(R.style.AnimationFade);
 		// 点击其他地方消失
