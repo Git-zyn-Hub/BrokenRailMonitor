@@ -6,13 +6,13 @@
     android:orientation="vertical" >
 
     <Button
-        android:id="@+id/open"
+        android:id="@+id/btnSubscribe"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/button_background"
-        android:text="@string/open" />
+        android:text="@string/subscribe" />
 
-    <Button
+   <!--  <Button
         android:id="@+id/save"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -24,6 +24,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/button_background"
-        android:text="@string/close" />
+        android:text="@string/close" /> -->
 
 </LinearLayout>

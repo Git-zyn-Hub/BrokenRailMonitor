@@ -69,7 +69,7 @@ public class HomeFragment extends Fragment {
 	// 声明PopupWindow对象的引用
 	private PopupWindow popupWindow;
 	private LayoutInflater inflaterGlobal;
-	private Button test;
+	private Boolean isSubscribingAllRailInfo = false;
 	// 本页面传递时的按钮btn的标志码
 	// private final static int request_Code = 11;
 	private OnClickListener btnEditListener = new OnClickListener() {
@@ -483,26 +483,24 @@ public class HomeFragment extends Fragment {
 		// 点击按钮弹出菜单
 		Button pop = (Button) vTabHome.findViewById(R.id.btnPop);
 		pop.setOnClickListener(popClick);
-		test = (Button) vTabHome.findViewById(R.id.btnTest);
-		test.setOnClickListener(testClick);
 		return vTabHome;
 	}
 
-	private View.OnClickListener testClick = new View.OnClickListener() {
-
-		@Override
-		public void onClick(View v) {
-
-			Toast.makeText(MainActivity.getMainActivity(), "test按钮被点击", Toast.LENGTH_LONG).show();
-		}
-	};
+	// private View.OnClickListener testClick = new View.OnClickListener() {
+	//
+	// @Override
+	// public void onClick(View v) {
+	//
+	// Toast.makeText(MainActivity.getMainActivity(), "test按钮被点击",
+	// Toast.LENGTH_LONG).show();
+	// }
+	// };
 
 	// 点击弹出左侧菜单的显示方式
 	private OnClickListener popClick = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
 			getPopupWindow();
-			Log.e("TMD", "这是怎么回事？");
 			// 这里是位置显示方式,在按钮的左下角
 			// popupWindow.showAsDropDown(v);
 			// 这里可以尝试其它效果方式,如popupWindow.showAsDropDown(v,
@@ -530,7 +528,7 @@ public class HomeFragment extends Fragment {
 		// 获取自定义布局文件pop.xml的视图
 		View popupWindow_view = inflaterGlobal.inflate(R.layout.activity_popwindow, null, false);
 		// 创建PopupWindow实例,200,150分别是宽度和高度
-		popupWindow = new PopupWindow(popupWindow_view, 200, 150, true);
+		popupWindow = new PopupWindow(popupWindow_view, 500, 300, true);
 		// popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
 		// popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
 		// popupWindow.setContentView(LayoutInflater.from(this).inflate(R.layout.layout_popupwindow_style01,
@@ -550,36 +548,39 @@ public class HomeFragment extends Fragment {
 		});
 
 		// pop.xml视图里面的控件
-		Button open = (Button) popupWindow_view.findViewById(R.id.open);
-		Button save = (Button) popupWindow_view.findViewById(R.id.save);
-		Button close = (Button) popupWindow_view.findViewById(R.id.close);
+		final Button btnSubscribe = (Button) popupWindow_view.findViewById(R.id.btnSubscribe);
 		// pop.xml视图里面的控件触发的事件
 		// 打开
-		open.setOnClickListener(new OnClickListener() {
+		btnSubscribe.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// 这里可以执行相关操作
-				System.out.println("打开操作");
-				// 对话框消失
-				popupWindow.dismiss();
-			}
-		});
-		// 保存
-		save.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// 这里可以执行相关操作
-				System.out.println("保存操作");
-				popupWindow.dismiss();
-			}
-		});
-		// 关闭
-		close.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// 这里可以执行相关操作
-				System.out.println("关闭操作");
-				popupWindow.dismiss();
+				try {
+					// 这里可以执行相关操作
+					if (!isConnect) {
+						Toast.makeText(MainActivity.getMainActivity(), "请先连接！", Toast.LENGTH_LONG).show();
+						popupWindow.dismiss();
+						return;
+					}
+					if (isSubscribingAllRailInfo) {
+						isSubscribingAllRailInfo = false;
+						btnSubscribe.setText(R.string.subscribe);
+
+						sendBytesBuffer = SendDataPackage.PackageSendData(
+								(byte) MainActivity.getMainActivity().ClientID, (byte) 0xff,
+								(byte) CommandType.SubscribeAllRailInfo.getValue(), new byte[] { (byte) 0xff });
+					} else {
+						isSubscribingAllRailInfo = true;
+						btnSubscribe.setText(R.string.unsubscribe);
+						sendBytesBuffer = SendDataPackage.PackageSendData(
+								(byte) MainActivity.getMainActivity().ClientID, (byte) 0xff,
+								(byte) CommandType.SubscribeAllRailInfo.getValue(), new byte[] { 0 });
+					}
+					new Thread(sendBytesThread).start();
+					// 对话框消失
+					popupWindow.dismiss();
+				} catch (Exception e) {
+					e.getStackTrace();
+				}
 			}
 		});
 	}

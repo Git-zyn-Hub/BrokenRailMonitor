@@ -48,16 +48,9 @@
             <Button
                 android:id="@+id/btnPop"
                 android:layout_width="wrap_content"
+                android:layout_marginStart="10dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/right" >
-            </Button>
-
-            <Button
-                android:id="@+id/btnTest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/button_background"
-                android:text="Test" >
             </Button>
         </LinearLayout>
 

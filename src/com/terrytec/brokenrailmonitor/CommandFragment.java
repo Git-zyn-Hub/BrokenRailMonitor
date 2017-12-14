@@ -200,6 +200,16 @@ public class CommandFragment extends Fragment {
 				return "擦除flash";
 			case ErrorReport:
 				return "";
+			case SubscribeAllRailInfo: {
+				if (data.length > 7) {
+					if ((data[6] & 0xff) == 0xff) {
+						return "取消订阅所有铁轨信息";
+					} else if (data[6] == 0) {
+
+						return "订阅所有铁轨信息";
+					}
+				}
+			}
 			default:
 				return null;
 			}
@@ -276,6 +286,15 @@ public class CommandFragment extends Fragment {
 			case EraseFlash:
 			case ErrorReport:
 				return DataLevel.Error;
+			case SubscribeAllRailInfo: {
+				if (data.length > 7) {
+					if ((data[6] & 0xff) == 0xff) {
+						return DataLevel.Error;
+					} else if (data[6] == 0) {
+						return DataLevel.Normal;
+					}
+				}
+			}
 			default:
 				return DataLevel.Default;
 			}
