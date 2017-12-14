@@ -115,6 +115,26 @@ public class TerminalAnd2Rails extends RelativeLayout {
 		rightRail.setRailError();
 	}
 
+	public void changeLeftRailTimeout() {
+		Rail leftRail = (Rail) this.findViewById(R.id.railLeft);
+		leftRail.setRailTimeout();
+	}
+
+	public void changeRightRailTimeout() {
+		Rail rightRail = (Rail) this.findViewById(R.id.railRight);
+		rightRail.setRailTimeout();
+	}
+
+	public void changeLeftRailContinuousInterference() {
+		Rail leftRail = (Rail) this.findViewById(R.id.railLeft);
+		leftRail.setRailContinuousInterference();
+	}
+
+	public void changeRightRailContinuousInterference() {
+		Rail rightRail = (Rail) this.findViewById(R.id.railRight);
+		rightRail.setRailContinuousInterference();
+	}
+
 	public void setAllProperty(TerminalAnd2Rails t) {
 		setTerminalNo(t.terminalNo);
 		setNeighbourSmall(t.neighbourSmall);

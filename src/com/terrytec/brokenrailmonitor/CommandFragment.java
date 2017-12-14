@@ -131,6 +131,12 @@ public class CommandFragment extends Fragment {
 		case Error:
 			txtNewMsg.setTextColor(getResources().getColor(R.color.red));
 			break;
+		case Timeout:
+			txtNewMsg.setTextColor(getResources().getColor(R.color.gray));
+			break;
+		case ContinuousInterference:
+			txtNewMsg.setTextColor(getResources().getColor(R.color.royalblue1));
+			break;
 		default:
 			txtNewMsg.setTextColor(getResources().getColor(R.color.black));
 			break;

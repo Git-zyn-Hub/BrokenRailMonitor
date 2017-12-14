@@ -17,6 +17,7 @@ import com.terrytec.brokenrailmonitor.classes.FileOperate;
 import com.terrytec.brokenrailmonitor.classes.FileServer;
 import com.terrytec.brokenrailmonitor.classes.SendDataPackage;
 
+import android.R.string;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -842,11 +843,41 @@ public class HomeFragment extends Fragment {
 	private void handleData(byte[] data) {
 		if (data.length > 1 && data[0] == 0x66 && (data[1] & 0xFF) == 0xcc) {
 			if (checksumCalc(data)) {
+				if (terminalAnd2Rails != null) {
+					int length = (data[2] << 8) + data[3];
+					byte[] content = new byte[length - 9];
+					byte[] bytesTemp = new byte[length - 9];
+					int contentLength = content.length;
+					for (int i = 7; i < length - 2; i++) {
+						bytesTemp[i - 7] = data[i];
+					}
+					for (int i = 0; i < contentLength; i += 10) {
+						for (int j = 0; j < 10; j++) {
+							content[i + j] = bytesTemp[contentLength - i - (10 - j)];
+						}
+					}
+					if (contentLength % 10 == 0) {
+						if (contentLength == 10) {
+							int index = FindMasterControlIndex(content[0]);
+							if (index != -1) {
+		                        int onOffRailLeft = content[1] & 0x0f;
+								setRailLeftState(index,onOffRailLeft);
+		                        int onOffRailRight = content[2] & 0x0f;
+		                        setRailRightState(index,onOffRailRight);
+							} else
+								((CommandFragment) MainActivity.getMainActivity().commandFragment)
+										.AddCmdMsg("未找到数据中包含终端号所示终端".getBytes(), DataLevel.Error);
+						}
+					} else
+						((CommandFragment) MainActivity.getMainActivity().commandFragment)
+								.AddCmdMsg("发送数据内容的长度错误，应该是10的倍数".getBytes(), DataLevel.Error);
 
-			}else
-				((CommandFragment) MainActivity.getMainActivity().commandFragment)
-				.AddCmdMsg("校验和出错".getBytes(), DataLevel.Error);
-				
+				} else
+					((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg("终端及铁轨为空".getBytes(),
+							DataLevel.Error);
+			} else
+				((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg("校验和出错".getBytes(),
+						DataLevel.Error);
 		}
 	}
 
@@ -858,6 +889,74 @@ public class HomeFragment extends Fragment {
 		}
 		return ((data[length - 2] & 0xFF) == ((checksum & 0xFF00) >> 8))
 				&& ((data[length - 1] & 0xFF) == (checksum & 0xFF)) ? true : false;
+	}
+
+	private void setRailLeftState(int index, int onOff) {
+		TerminalAnd2Rails tAnd2R = terminalAnd2Rails.get(index);
+		if (onOff == 0) {// 通的
+			tAnd2R.changeLeftRailNormal();
+		} else if (onOff == 7) {// 断的
+			int tNo = tAnd2R.terminalNo;
+			int tNextNo = terminalAnd2Rails.get(index + 1).terminalNo;
+
+			((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg(
+					(String.valueOf(tNo) + "号终端与" + String.valueOf(tNextNo) + "号终端之间的1号铁轨断开！").getBytes(),
+					DataLevel.Error);
+			tAnd2R.changeLeftRailError();
+		} else if (onOff == 9) {// 超时
+			int tNo = tAnd2R.terminalNo;
+			int tNextNo = terminalAnd2Rails.get(index + 1).terminalNo;
+
+			((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg(
+					(String.valueOf(tNo) + "号终端与" + String.valueOf(tNextNo) + "号终端之间的1号铁轨超时！").getBytes(),
+					DataLevel.Timeout);
+			tAnd2R.changeLeftRailTimeout();
+		} else if (onOff == 0x0a) {// 持续干扰
+			int tNo = tAnd2R.terminalNo;
+			int tNextNo = terminalAnd2Rails.get(index + 1).terminalNo;
+
+			((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg(
+					(String.valueOf(tNo) + "号终端与" + String.valueOf(tNextNo) + "号终端之间的1号铁轨持续干扰！").getBytes(),
+					DataLevel.ContinuousInterference);
+			tAnd2R.changeLeftRailContinuousInterference();
+		} else {
+			((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg("收到未定义数据".getBytes(),
+					DataLevel.ContinuousInterference);
+		}
+	}
+	
+	private void setRailRightState(int index, int onOff) {
+		TerminalAnd2Rails tAnd2R = terminalAnd2Rails.get(index);
+		if (onOff == 0) {// 通的
+			tAnd2R.changeRightRailNormal();
+		} else if (onOff == 7) {// 断的
+			int tNo = tAnd2R.terminalNo;
+			int tNextNo = terminalAnd2Rails.get(index + 1).terminalNo;
+
+			((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg(
+					(String.valueOf(tNo) + "号终端与" + String.valueOf(tNextNo) + "号终端之间的2号铁轨断开！").getBytes(),
+					DataLevel.Error);
+			tAnd2R.changeRightRailError();
+		} else if (onOff == 9) {// 超时
+			int tNo = tAnd2R.terminalNo;
+			int tNextNo = terminalAnd2Rails.get(index + 1).terminalNo;
+
+			((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg(
+					(String.valueOf(tNo) + "号终端与" + String.valueOf(tNextNo) + "号终端之间的2号铁轨超时！").getBytes(),
+					DataLevel.Timeout);
+			tAnd2R.changeRightRailTimeout();
+		} else if (onOff == 0x0a) {// 持续干扰
+			int tNo = tAnd2R.terminalNo;
+			int tNextNo = terminalAnd2Rails.get(index + 1).terminalNo;
+
+			((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg(
+					(String.valueOf(tNo) + "号终端与" + String.valueOf(tNextNo) + "号终端之间的2号铁轨持续干扰！").getBytes(),
+					DataLevel.ContinuousInterference);
+			tAnd2R.changeRightRailContinuousInterference();
+		} else {
+			((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg("收到未定义数据".getBytes(),
+					DataLevel.ContinuousInterference);
+		}
 	}
 
 	public Boolean getIsConnect() {

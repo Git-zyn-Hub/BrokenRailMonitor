@@ -59,6 +59,6 @@ public class Enums extends Object {
 	}
 
 	public enum DataLevel {
-		Default, Normal, Warning, Error
+		Default, Normal, Warning, Error, Timeout, ContinuousInterference
 	}
 }
