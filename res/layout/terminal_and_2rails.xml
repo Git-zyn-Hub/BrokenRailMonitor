@@ -20,8 +20,30 @@
             android:background="@drawable/button_add"
             android:text="@string/add"
             android:textSize="12sp"
-            android:visibility="invisible" >
+            android:visibility="gone" >
         </Button>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llStressTempeLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tvRailStressLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/cyan"
+            android:text="######" />
+
+        <TextView
+            android:id="@+id/tvRailTemperatureLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/red"
+            android:text="######" />
     </LinearLayout>
 
     <LinearLayout
@@ -87,6 +109,28 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/llStressTempeRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tvRailStressRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/cyan"
+            android:text="######" />
+
+        <TextView
+            android:id="@+id/tvRailTemperatureRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/red"
+            android:text="######" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/llDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -102,7 +146,7 @@
             android:padding="0dp"
             android:text="@string/delete"
             android:textSize="14sp"
-            android:visibility="invisible" >
+            android:visibility="gone" >
         </Button>
     </LinearLayout>
 

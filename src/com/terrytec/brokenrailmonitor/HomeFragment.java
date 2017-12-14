@@ -85,12 +85,18 @@ public class HomeFragment extends Fragment {
 					for (TerminalAnd2Rails tAnd2Rs : terminalAnd2Rails) {
 						Button btnAdd = (Button) tAnd2Rs.findViewById(R.id.btnAdd);
 						Button btnDelete = (Button) tAnd2Rs.findViewById(R.id.btnDelete);
-						if (btnAdd.getVisibility() == View.INVISIBLE) {
+						LinearLayout llStressTempeLeft=(LinearLayout)tAnd2Rs.findViewById(R.id.llStressTempeLeft);
+						LinearLayout llStressTempeRight=(LinearLayout)tAnd2Rs.findViewById(R.id.llStressTempeRight);
+						if (!isInEditMode) {
 							btnAdd.setVisibility(View.VISIBLE);
 							btnDelete.setVisibility(View.VISIBLE);
+							llStressTempeLeft.setVisibility(View.GONE);
+							llStressTempeRight.setVisibility(View.GONE);
 						} else {
-							btnAdd.setVisibility(View.INVISIBLE);
-							btnDelete.setVisibility(View.INVISIBLE);
+							btnAdd.setVisibility(View.GONE);
+							btnDelete.setVisibility(View.GONE);
+							llStressTempeLeft.setVisibility(View.VISIBLE);
+							llStressTempeRight.setVisibility(View.VISIBLE);
 						}
 					}
 					View view = llContainer.getChildAt(llContainer.getChildCount() - 1);
