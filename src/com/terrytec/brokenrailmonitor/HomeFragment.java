@@ -85,8 +85,8 @@ public class HomeFragment extends Fragment {
 					for (TerminalAnd2Rails tAnd2Rs : terminalAnd2Rails) {
 						Button btnAdd = (Button) tAnd2Rs.findViewById(R.id.btnAdd);
 						Button btnDelete = (Button) tAnd2Rs.findViewById(R.id.btnDelete);
-						LinearLayout llStressTempeLeft=(LinearLayout)tAnd2Rs.findViewById(R.id.llStressTempeLeft);
-						LinearLayout llStressTempeRight=(LinearLayout)tAnd2Rs.findViewById(R.id.llStressTempeRight);
+						LinearLayout llStressTempeLeft = (LinearLayout) tAnd2Rs.findViewById(R.id.llStressTempeLeft);
+						LinearLayout llStressTempeRight = (LinearLayout) tAnd2Rs.findViewById(R.id.llStressTempeRight);
 						if (!isInEditMode) {
 							btnAdd.setVisibility(View.VISIBLE);
 							btnDelete.setVisibility(View.VISIBLE);
@@ -417,6 +417,7 @@ public class HomeFragment extends Fragment {
 				if (msg.what == RECEIVED || msg.what == SEND) {
 					try {
 						byte[] receivedBytes = (byte[]) msg.obj;
+						handleData(receivedBytes);
 						if (receivedBytes.length > 5) {
 							if (receivedBytes[0] == 0x55 && (receivedBytes[1] & 0xFF) == 0xAA) {
 								switch (CommandType.valueOf(receivedBytes[5] & 0xFF)) {
@@ -836,6 +837,27 @@ public class HomeFragment extends Fragment {
 			i++;
 		}
 		return -1;
+	}
+
+	private void handleData(byte[] data) {
+		if (data.length > 1 && data[0] == 0x66 && (data[1] & 0xFF) == 0xcc) {
+			if (checksumCalc(data)) {
+
+			}else
+				((CommandFragment) MainActivity.getMainActivity().commandFragment)
+				.AddCmdMsg("校验和出错".getBytes(), DataLevel.Error);
+				
+		}
+	}
+
+	private Boolean checksumCalc(byte[] data) {
+		int checksum = 0;
+		int length = data.length;
+		for (int i = 0; i < length - 2; i++) {
+			checksum += data[i];
+		}
+		return ((data[length - 2] & 0xFF) == ((checksum & 0xFF00) >> 8))
+				&& ((data[length - 1] & 0xFF) == (checksum & 0xFF)) ? true : false;
 	}
 
 	public Boolean getIsConnect() {
