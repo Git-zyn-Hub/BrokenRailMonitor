@@ -15,6 +15,7 @@ import com.terrytec.brokenrailmonitor.Enums.DataLevel;
 import com.terrytec.brokenrailmonitor.classes.DensityUtil;
 import com.terrytec.brokenrailmonitor.classes.FileOperate;
 import com.terrytec.brokenrailmonitor.classes.FileServer;
+import com.terrytec.brokenrailmonitor.classes.MacAddress;
 import com.terrytec.brokenrailmonitor.classes.SendDataPackage;
 
 import android.annotation.SuppressLint;
@@ -395,7 +396,7 @@ public class HomeFragment extends Fragment {
 				if (ip.length() > 1) {
 					ip = ip.substring(1, ip.length());
 				}
-				strMessage = "手机" + ip + ":" + socket.getLocalPort();
+				strMessage = "手机" + ip + ":" + socket.getLocalPort() + "#" + MacAddress.getLocalMacAddressFromIp();
 				new Thread(sendThread).start();
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
@@ -556,6 +557,11 @@ public class HomeFragment extends Fragment {
 
 		// pop.xml视图里面的控件
 		final Button btnSubscribe = (Button) popupWindow_view.findViewById(R.id.btnSubscribe);
+		if (isSubscribingAllRailInfo)
+			btnSubscribe.setText(R.string.unsubscribe);
+		else
+			btnSubscribe.setText(R.string.subscribe);
+
 		// pop.xml视图里面的控件触发的事件
 		// 打开
 		btnSubscribe.setOnClickListener(new OnClickListener() {
