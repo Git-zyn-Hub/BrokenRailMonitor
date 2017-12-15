@@ -1,5 +1,6 @@
 package com.terrytec.brokenrailmonitor.classes;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -147,4 +148,24 @@ public class FileOperate {
 		ouStream.flush();
 		ouStream.close();
 	}
+	
+	/** 
+     * 获取指定文件大小  
+     * @param f  
+     * @return  
+     * @throws Exception 　　 
+     */  
+    public static long getFileSize(File file) throws Exception {  
+        long size = 0;  
+        if (file.exists()) {  
+            FileInputStream fis = null; 
+        	try {
+                fis = new FileInputStream(file);  
+                size = fis.available();  
+			} finally {
+				fis.close();
+			}
+        } 
+        return size;  
+    }  
 }

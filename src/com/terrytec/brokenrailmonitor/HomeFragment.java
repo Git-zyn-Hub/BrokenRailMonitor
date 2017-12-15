@@ -17,7 +17,6 @@ import com.terrytec.brokenrailmonitor.classes.FileOperate;
 import com.terrytec.brokenrailmonitor.classes.FileServer;
 import com.terrytec.brokenrailmonitor.classes.SendDataPackage;
 
-import android.R.string;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -418,7 +417,6 @@ public class HomeFragment extends Fragment {
 				if (msg.what == RECEIVED || msg.what == SEND) {
 					try {
 						byte[] receivedBytes = (byte[]) msg.obj;
-						handleData(receivedBytes);
 						if (receivedBytes.length > 5) {
 							if (receivedBytes[0] == 0x55 && (receivedBytes[1] & 0xFF) == 0xAA) {
 								switch (CommandType.valueOf(receivedBytes[5] & 0xFF)) {
@@ -455,6 +453,7 @@ public class HomeFragment extends Fragment {
 						}
 						((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg(receivedBytes,
 								DataLevel.Default);
+						handleData(receivedBytes);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -885,6 +884,14 @@ public class HomeFragment extends Fragment {
 							} else
 								((CommandFragment) MainActivity.getMainActivity().commandFragment)
 										.AddCmdMsg("未找到数据中包含终端号所示终端".getBytes(), DataLevel.Error);
+							terminalAnd2Rails.get(index)
+									.setRailStressLeft(((content[3] & 0xff) << 8) + (content[4] & 0xff));
+							terminalAnd2Rails.get(index)
+									.setRailStressRight(((content[5] & 0xff) << 8) + (content[6] & 0xff));
+							terminalAnd2Rails.get(index).setRailTemperatureLeft(setMasterCtrlTemperature(content[7]));
+							terminalAnd2Rails.get(index).setRailTemperatureRight(setMasterCtrlTemperature(content[8]));
+							terminalAnd2Rails.get(index).setMCTemperature(setMasterCtrlTemperature(content[9]));
+
 						} else {
 							// 如果有多个终端的数据，需要处理冲突。
 							for (int i = 0; i < contentLength - 10; i += 10) {
@@ -966,6 +973,28 @@ public class HomeFragment extends Fragment {
 										setRailRightState(indexLastTerminal, onOffRail2Right);
 									}
 								}
+								terminalAnd2Rails.get(index)
+										.setRailStressLeft(((content[i + 3] & 0xff) << 8) + (content[i + 4] & 0xff));
+								terminalAnd2Rails.get(index)
+										.setRailStressRight(((content[i + 5] & 0xff) << 8) + (content[i + 6] & 0xff));
+								terminalAnd2Rails.get(index)
+										.setRailTemperatureLeft(setMasterCtrlTemperature(content[i + 7]));
+								terminalAnd2Rails.get(index)
+										.setRailTemperatureRight(setMasterCtrlTemperature(content[i + 8]));
+								terminalAnd2Rails.get(index).setMCTemperature(setMasterCtrlTemperature(content[i + 9]));
+								if (i == (contentLength - 20)) {
+									index = FindMasterControlIndex(content[i + 10]);
+									terminalAnd2Rails.get(index).setRailStressLeft(
+											((content[i + 13] & 0xff) << 8) + (content[i + 14] & 0xff));
+									terminalAnd2Rails.get(index).setRailStressRight(
+											((content[i + 15] & 0xff) << 8) + (content[i + 16] & 0xff));
+									terminalAnd2Rails.get(index)
+											.setRailTemperatureLeft(setMasterCtrlTemperature(content[i + 17]));
+									terminalAnd2Rails.get(index)
+											.setRailTemperatureRight(setMasterCtrlTemperature(content[i + 18]));
+									terminalAnd2Rails.get(index)
+											.setMCTemperature(setMasterCtrlTemperature(content[i + 19]));
+								}
 							}
 						}
 					} else
@@ -980,6 +1009,17 @@ public class HomeFragment extends Fragment {
 						DataLevel.Error);
 		}
 
+	}
+
+	private int setMasterCtrlTemperature(byte tempe) {
+		int destTempe;
+		int sign = (tempe & 0x80) >> 7;
+		if (sign == 1) {
+			destTempe = -(tempe & 0x7f);
+		} else {
+			destTempe = tempe & 0xff;
+		}
+		return destTempe;
 	}
 
 	private Boolean checksumCalc(byte[] data) {
@@ -1059,7 +1099,7 @@ public class HomeFragment extends Fragment {
 					DataLevel.ContinuousInterference);
 		}
 	}
-	
+
 	private void setRailLeftDifferent(int index) {
 		TerminalAnd2Rails tAnd2R = terminalAnd2Rails.get(index);
 		tAnd2R.changeLeftRailDifferent();

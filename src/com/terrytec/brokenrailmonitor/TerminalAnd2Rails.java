@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class TerminalAnd2Rails extends RelativeLayout {
 
@@ -134,15 +135,40 @@ public class TerminalAnd2Rails extends RelativeLayout {
 		Rail rightRail = (Rail) this.findViewById(R.id.railRight);
 		rightRail.setRailContinuousInterference();
 	}
-	
+
 	public void changeLeftRailDifferent() {
 		Rail leftRail = (Rail) this.findViewById(R.id.railLeft);
 		leftRail.setRailDifferent();
 	}
-	
+
 	public void changeRightRailDifferent() {
 		Rail rightRail = (Rail) this.findViewById(R.id.railRight);
 		rightRail.setRailDifferent();
+	}
+
+	public void setRailStressLeft(int value) {
+		TextView tvRailStressLeft = (TextView) this.findViewById(R.id.tvRailStressLeft);
+		tvRailStressLeft.setText(String.valueOf(value));
+	}
+
+	public void setRailStressRight(int value) {
+		TextView tvRailStressRight = (TextView) this.findViewById(R.id.tvRailStressRight);
+		tvRailStressRight.setText(String.valueOf(value));
+	}
+
+	public void setRailTemperatureLeft(int value) {
+		TextView tvRailTemperatureLeft = (TextView) this.findViewById(R.id.tvRailTemperatureLeft);
+		tvRailTemperatureLeft.setText(String.valueOf(value) + "¡æ");
+	}
+
+	public void setRailTemperatureRight(int value) {
+		TextView tvRailTemperatureRight = (TextView) this.findViewById(R.id.tvRailTemperatureRight);
+		tvRailTemperatureRight.setText(String.valueOf(value) + "¡æ");
+	}
+
+	public void setMCTemperature(int value) {
+		TextView tvMCTemperature = (TextView) this.findViewById(R.id.tvMCTemperature);
+		tvMCTemperature.setText(String.valueOf(value) + "¡æ");
 	}
 
 	public void setAllProperty(TerminalAnd2Rails t) {
