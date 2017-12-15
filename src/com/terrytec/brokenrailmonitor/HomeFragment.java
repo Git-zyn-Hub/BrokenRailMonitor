@@ -860,13 +860,113 @@ public class HomeFragment extends Fragment {
 						if (contentLength == 10) {
 							int index = FindMasterControlIndex(content[0]);
 							if (index != -1) {
-		                        int onOffRailLeft = content[1] & 0x0f;
-								setRailLeftState(index,onOffRailLeft);
-		                        int onOffRailRight = content[2] & 0x0f;
-		                        setRailRightState(index,onOffRailRight);
+								// 检查1号左侧铁轨
+								if (index != 0) {
+									// 第一个终端没有上边的铁轨
+									int onOffRailLeftUp = content[1] & 0x0f;
+									setRailLeftState(index - 1, onOffRailLeftUp);
+								}
+								if (index != terminalAnd2Rails.size() - 1) {
+									// 最后一个终端没有下边的铁轨
+									int onOffRailLeftDown = (content[1] & 0xf0) >> 4;
+									setRailLeftState(index, onOffRailLeftDown);
+								}
+								// 检查2号铁轨
+								if (index != 0) {
+									// 第一个终端没有左边的铁轨
+									int onOffRailRightUp = content[2] & 0x0f;
+									setRailRightState(index - 1, onOffRailRightUp);
+								}
+								if (index != terminalAnd2Rails.size() - 1) {
+									// 最后一个终端没有右边的铁轨
+									int onOffRailRightDown = (content[2] & 0xf0) >> 4;
+									setRailRightState(index, onOffRailRightDown);
+								}
 							} else
 								((CommandFragment) MainActivity.getMainActivity().commandFragment)
 										.AddCmdMsg("未找到数据中包含终端号所示终端".getBytes(), DataLevel.Error);
+						} else {
+							// 如果有多个终端的数据，需要处理冲突。
+							for (int i = 0; i < contentLength - 10; i += 10) {
+								int index = FindMasterControlIndex(content[i]);
+
+								// 检查1号铁轨
+								if (i == 0 && index != 0) {
+									// 第一个终端没有左边的铁轨
+									int onOffRailLeftUp = content[1] & 0x0f;
+									setRailLeftState(index - 1, onOffRailLeftUp);
+								} else {
+									if (((content[i + 1] & 0xf0) >> 4) == (content[i + 11] & 0x0f)) {
+										// 不冲突
+										int onOff = (content[i + 1] & 0xf0) >> 4;
+										setRailLeftState(index, onOff);
+									} else if (((content[i + 1] & 0xf0) >> 4) == 9 || (content[i + 11] & 0x0f) == 9) {
+										setRailLeftState(index, 9);
+									} else {
+										// 冲突
+										setRailLeftDifferent(index);
+										int tNo = terminalAnd2Rails.get(index).terminalNo;
+										int tNextNo = terminalAnd2Rails.get(index + 1).terminalNo;
+										String errorTerminal = "";
+										if ((content[i + 1] & 0xf0) == 0x70) {
+											errorTerminal = String.valueOf(tNo) + "号终端接收异常";
+										} else if ((content[i + 11] & 0x0f) == 0x07) {
+											errorTerminal = String.valueOf(tNextNo) + "号终端接收异常";
+										}
+										((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg(
+												(String.valueOf(tNo) + "号终端与" + String.valueOf(tNextNo)
+														+ "号终端之间的1号铁轨通断信息矛盾！" + errorTerminal + "，请检查").getBytes(),
+												DataLevel.Warning);
+
+									}
+								}
+								if (i == (contentLength - 20)) {
+									int indexLastTerminal = FindMasterControlIndex(content[i + 10]);
+									if (indexLastTerminal != terminalAnd2Rails.size() - 1) {
+										// 最后一个终端没有右边的铁轨
+										int onOffRailLeftDown = (content[i + 11] & 0xf0) >> 4;
+										setRailLeftState(indexLastTerminal, onOffRailLeftDown);
+									}
+								}
+
+								// 检查2号铁轨
+								if (i == 0 && index != 0) {
+									// 第一个终端没有左边的铁轨
+									int onOffRailRightUp = content[2] & 0x0f;
+									setRailRightState(index - 1, onOffRailRightUp);
+								} else {
+									if (((content[i + 2] & 0xf0) >> 4) == (content[i + 12] & 0x0f)) {
+										// 不冲突
+										int onOff = (content[i + 2] & 0xf0) >> 4;
+										setRailRightState(index, onOff);
+									} else if (((content[i + 2] & 0xf0) >> 4) == 9 || (content[i + 12] & 0x0f) == 9) {
+										setRailRightState(index, 9);
+									} else {
+										// 冲突
+										setRailRightDifferent(index);
+										int tNo = terminalAnd2Rails.get(index).terminalNo;
+										int tNextNo = terminalAnd2Rails.get(index + 1).terminalNo;
+										String errorTerminal = "";
+										if ((content[i + 2] & 0xf0) == 0x70) {
+											errorTerminal = String.valueOf(tNo) + "号终端接收异常";
+										} else if ((content[i + 12] & 0x0f) == 0x07) {
+											errorTerminal = String.valueOf(tNextNo) + "号终端接收异常";
+										}
+										((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg(
+												(String.valueOf(tNo) + "号终端与" + String.valueOf(tNextNo)
+														+ "号终端之间的2号铁轨通断信息矛盾！" + errorTerminal + "，请检查").getBytes(),
+												DataLevel.Warning);
+									}
+								}
+								if (i == (contentLength - 20)) {
+									int indexLastTerminal = FindMasterControlIndex(content[i + 10]);
+									if (indexLastTerminal != terminalAnd2Rails.size() - 1) {
+										// 最后一个终端没有右边的铁轨
+										int onOffRail2Right = (content[i + 12] & 0xf0) >> 4;
+										setRailRightState(indexLastTerminal, onOffRail2Right);
+									}
+								}
+							}
 						}
 					} else
 						((CommandFragment) MainActivity.getMainActivity().commandFragment)
@@ -879,13 +979,14 @@ public class HomeFragment extends Fragment {
 				((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg("校验和出错".getBytes(),
 						DataLevel.Error);
 		}
+
 	}
 
 	private Boolean checksumCalc(byte[] data) {
 		int checksum = 0;
 		int length = data.length;
 		for (int i = 0; i < length - 2; i++) {
-			checksum += data[i];
+			checksum += (data[i] & 0xFF);
 		}
 		return ((data[length - 2] & 0xFF) == ((checksum & 0xFF00) >> 8))
 				&& ((data[length - 1] & 0xFF) == (checksum & 0xFF)) ? true : false;
@@ -924,7 +1025,7 @@ public class HomeFragment extends Fragment {
 					DataLevel.ContinuousInterference);
 		}
 	}
-	
+
 	private void setRailRightState(int index, int onOff) {
 		TerminalAnd2Rails tAnd2R = terminalAnd2Rails.get(index);
 		if (onOff == 0) {// 通的
@@ -957,6 +1058,16 @@ public class HomeFragment extends Fragment {
 			((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg("收到未定义数据".getBytes(),
 					DataLevel.ContinuousInterference);
 		}
+	}
+	
+	private void setRailLeftDifferent(int index) {
+		TerminalAnd2Rails tAnd2R = terminalAnd2Rails.get(index);
+		tAnd2R.changeLeftRailDifferent();
+	}
+
+	private void setRailRightDifferent(int index) {
+		TerminalAnd2Rails tAnd2R = terminalAnd2Rails.get(index);
+		tAnd2R.changeRightRailDifferent();
 	}
 
 	public Boolean getIsConnect() {

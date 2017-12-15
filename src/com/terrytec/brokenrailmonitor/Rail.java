@@ -31,4 +31,9 @@ public class Rail extends RelativeLayout {
 		TextView rail = (TextView) this.findViewById(R.id.tvRail);
 		rail.setBackground(getResources().getDrawable(R.drawable.rail_continuous_interference,null));
 	}
+	
+	public void setRailDifferent() {
+		TextView rail = (TextView) this.findViewById(R.id.tvRail);
+		rail.setBackground(getResources().getDrawable(R.drawable.rail_different,null));
+	}
 }

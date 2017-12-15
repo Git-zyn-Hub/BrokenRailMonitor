@@ -26,7 +26,7 @@ public class SendDataPackage {
 		}
 		_checksum = 0;
 		for (int i = 0; i < length - 1; i++) {
-			_checksum += result[i];
+			_checksum += (result[i] & 0xFF);
 		}
 		result[length - 1] = _checksum;
 		return result;
