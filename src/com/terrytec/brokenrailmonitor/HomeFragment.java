@@ -1,11 +1,13 @@
 package com.terrytec.brokenrailmonitor;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -49,9 +51,12 @@ public class HomeFragment extends Fragment {
 	private final int SEND = 2;
 	private final int RECEIVEFILE = 3;
 	private final int SENDFILE = 4;
+	private final int IOException = 5;
+	private final int UnknownHostException = 6;
 	public List<TerminalAnd2Rails> terminalAnd2Rails;
 	private View vTabHome;
-	private static final String ServerIP = "103.44.145.248";
+	private static String serverIP = "103.44.145.248";
+	private static final String host = "f1880f0253.51mypc.cn";
 	private static final int ServerPort = 23539;
 	private static final int fileReceivePort = 23955;
 	private Socket socket = null;
@@ -322,7 +327,7 @@ public class HomeFragment extends Fragment {
 		@Override
 		public void run() {
 			try {
-				fileSocket = new Socket(ServerIP, fileReceivePort);
+				fileSocket = new Socket(serverIP, fileReceivePort);
 				Log.e("FILE", "----file connected success----");
 				try {
 					Thread.currentThread();
@@ -344,7 +349,7 @@ public class HomeFragment extends Fragment {
 
 			Socket data;
 			try {
-				data = new Socket(ServerIP, fileReceivePort);
+				data = new Socket(serverIP, fileReceivePort);
 				OutputStream outputData = data.getOutputStream();
 				FileInputStream fileInput;
 				try {
@@ -380,7 +385,7 @@ public class HomeFragment extends Fragment {
 		public void run() {
 			try {
 				// 初始化Scoket，连接到服务器
-				socket = new Socket(ServerIP, ServerPort);
+				socket = new Socket(serverIP, ServerPort);
 				isConnect = true;
 				// 启动接收线程
 				isReceive = true;
@@ -400,9 +405,19 @@ public class HomeFragment extends Fragment {
 				new Thread(sendThread).start();
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
+
+				Message msg = new Message();
+				msg.what = UnknownHostException;
+				myHandler.sendMessage(msg);
+
 				System.out.println("UnknownHostException-->" + e.toString());
 			} catch (IOException e) {
 				e.printStackTrace();
+
+				Message msg = new Message();
+				msg.what = IOException;
+				myHandler.sendMessage(msg);
+
 				System.out.println("IOException" + e.toString());
 			}
 		}
@@ -415,7 +430,9 @@ public class HomeFragment extends Fragment {
 		myHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				if (msg.what == RECEIVED || msg.what == SEND) {
+				switch (msg.what) {
+				case RECEIVED:
+				case SEND: {
 					try {
 						byte[] receivedBytes = (byte[]) msg.obj;
 						if (receivedBytes.length > 5) {
@@ -426,9 +443,11 @@ public class HomeFragment extends Fragment {
 									TextView tvClientID = (TextView) vTabHome.findViewById(R.id.tvClientID);
 									tvClientID.setText(String.valueOf(receivedBytes[4]));
 									break;
+								case BroadcastConfigFileSize:
+									handleBroadcastFileSize(receivedBytes);
+									break;
 								case RequestConfig:
 								case ReadPointInfo:
-
 								default:
 									break;
 								}
@@ -446,11 +465,13 @@ public class HomeFragment extends Fragment {
 							ctbHomeTitle.getTitleBarLeftBtn().setText("连接");
 							TextView tvClientID = (TextView) vTabHome.findViewById(R.id.tvClientID);
 							tvClientID.setText("0");
-							if (terminalAnd2Rails != null) {
-								for (TerminalAnd2Rails tAnd2R : terminalAnd2Rails) {
-									tAnd2R.setAccessPointNotConnect();
-								}
-							}
+							freshDevices();
+							// if (terminalAnd2Rails != null) {
+							// for (TerminalAnd2Rails tAnd2R :
+							// terminalAnd2Rails) {
+							// tAnd2R.setAccessPointNotConnect();
+							// }
+							// }
 						}
 						((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg(receivedBytes,
 								DataLevel.Default);
@@ -458,9 +479,13 @@ public class HomeFragment extends Fragment {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				} else if (msg.what == CONNECTED) {
+				}
+					break;
+				case CONNECTED: {
 					ctbHomeTitle.getTitleBarLeftBtn().setText("已连接");
-				} else if (msg.what == RECEIVEFILE) {
+				}
+					break;
+				case RECEIVEFILE: {
 					try {
 						freshDevices();
 						((CommandFragment) MainActivity.getMainActivity().commandFragment)
@@ -469,9 +494,22 @@ public class HomeFragment extends Fragment {
 						((CommandFragment) MainActivity.getMainActivity().commandFragment)
 								.AddCmdMsg("配置文件接收异常！".getBytes(), DataLevel.Error);
 					}
-				} else if (msg.what == SENDFILE) {
+				}
+					break;
+				case SENDFILE: {
 					((CommandFragment) MainActivity.getMainActivity().commandFragment)
 							.AddCmdMsg("终端配置文件发送成功".getBytes(), DataLevel.Normal);
+				}
+					break;
+				case UnknownHostException:
+					Toast.makeText(MainActivity.getMainActivity(), "连接时出现未知主机异常，无法连接！", Toast.LENGTH_LONG).show();
+					break;
+				case IOException:
+					Toast.makeText(MainActivity.getMainActivity(), "连接异常，无法连接！", Toast.LENGTH_LONG).show();
+					break;
+
+				default:
+					break;
 				}
 			}
 		};
@@ -491,9 +529,38 @@ public class HomeFragment extends Fragment {
 		// 点击按钮弹出菜单
 		Button pop = (Button) vTabHome.findViewById(R.id.btnPop);
 		pop.setOnClickListener(popClick);
+		new Thread(getInetAddressThread).start();
 		return vTabHome;
 	}
 
+	public static String GetInetAddress(String host) {
+		String IPAddress = "";
+		InetAddress ReturnStr1 = null;
+		try {
+			ReturnStr1 = InetAddress.getByName(host);
+			IPAddress = ReturnStr1.getHostAddress();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			Toast.makeText(MainActivity.getMainActivity(), "获取服务器IP地址，出现未知主机异常，可能无法连接！", Toast.LENGTH_LONG).show();
+			return IPAddress;
+		} catch (Exception e) {
+			e.printStackTrace();
+			Toast.makeText(MainActivity.getMainActivity(), "获取服务器IP地址异常，可能无法连接！", Toast.LENGTH_LONG).show();
+			return IPAddress;
+		}
+		return IPAddress;
+	}
+
+	/**
+	 * 网络操作相关的子线程
+	 */
+	Runnable getInetAddressThread = new Runnable() {
+
+		@Override
+		public void run() {
+			serverIP = GetInetAddress(host);
+		}
+	};
 	// private View.OnClickListener testClick = new View.OnClickListener() {
 	//
 	// @Override
@@ -1114,6 +1181,40 @@ public class HomeFragment extends Fragment {
 	private void setRailRightDifferent(int index) {
 		TerminalAnd2Rails tAnd2R = terminalAnd2Rails.get(index);
 		tAnd2R.changeRightRailDifferent();
+	}
+
+	private void handleBroadcastFileSize(byte[] data) {
+		int size = ((data[6] & 0xff) << 16) + ((data[7] & 0xff) << 8) + (data[8] & 0xff);
+		long configFileSize;
+		try {
+			String path = MainActivity.getMainActivity().getFilesDir() + "/config.xml";
+			configFileSize = FileOperate.getFileSize(new File(path));
+			if (configFileSize == size) {
+				AppendMessage("配置文件大小" + String.valueOf(configFileSize) + "字节，与服务器相同，不需下载。", DataLevel.Warning);
+			} else {
+				new AlertDialog.Builder(MainActivity.getMainActivity()).setTitle("系统提示")// 设置对话框标题
+						.setMessage("配置文件发生改变，大小" + String.valueOf(size) + "字节，是否下载？")// 设置显示的内容
+						.setPositiveButton("下载", new DialogInterface.OnClickListener() {// 添加确定按钮
+							@Override
+							public void onClick(DialogInterface dialog, int which) {// 确定按钮的响应事件
+								btnDownloadListener.onClick(vTabHome);
+							}
+						}).setNegativeButton("取消", new DialogInterface.OnClickListener() {// 添加返回按钮
+							@Override
+							public void onClick(DialogInterface dialog, int which) {// 响应事件
+
+							}
+						}).show();// 在按键响应事件中显示此对话框
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private void AppendMessage(String msg, DataLevel level) {
+		((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg(msg.getBytes(), level);
 	}
 
 	public Boolean getIsConnect() {
