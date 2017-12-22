@@ -35,5 +35,7 @@
     <string name="close">关闭</string>
     <string name="subscribe">订阅所有铁轨信息</string>
     <string name="unsubscribe">取消订阅所有铁轨信息</string>
+    <string name="ok">确认</string>
+    <string name="cancel">取消</string>
 
 </resources>
