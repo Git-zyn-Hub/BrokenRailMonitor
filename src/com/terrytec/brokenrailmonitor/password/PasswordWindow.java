@@ -1,16 +1,27 @@
 package com.terrytec.brokenrailmonitor.password;
 
+import com.terrytec.brokenrailmonitor.HomeFragment;
+import com.terrytec.brokenrailmonitor.MainActivity;
 import com.terrytec.brokenrailmonitor.R;
+
+import java.io.UnsupportedEncodingException;
+
+import com.terrytec.brokenrailmonitor.Enums.CommandType;
+import com.terrytec.brokenrailmonitor.classes.SendDataPackage;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 public class PasswordWindow extends PopupWindow {
 	private LayoutInflater inflaterGlobal;
 	// 声明PopupWindow对象的引用
 	private PasswordWindow pwdWindow;
+	private HomeFragment homeFragment;
 
 	/***
 	 * 获取PopupWindow实例
@@ -27,9 +38,9 @@ public class PasswordWindow extends PopupWindow {
 			return pwdWindow;
 		}
 	}
-	
+
 	public PasswordWindow() {
-		
+
 	}
 
 	public PasswordWindow(View contentView, int width, int height, Boolean focusable) {
@@ -44,6 +55,7 @@ public class PasswordWindow extends PopupWindow {
 		if (inflaterGlobal == null) {
 			return;
 		}
+		homeFragment = ((HomeFragment) MainActivity.getMainActivity().homeFragment);
 		View popupWindow_view = inflaterGlobal.inflate(R.layout.window_password, null, false);
 		// 创建PopupWindow实例,200,150分别是宽度和高度
 		pwdWindow = new PasswordWindow(popupWindow_view, 500, 400, true);
@@ -78,6 +90,31 @@ public class PasswordWindow extends PopupWindow {
 					pwdWindow.dismiss();
 				} catch (Exception e) {
 					e.getStackTrace();
+				}
+			}
+		});
+
+		final EditText etPassword = (EditText) popupWindow_view.findViewById(R.id.etPassword);
+		final Button btnOK = (Button) popupWindow_view.findViewById(R.id.btnOK);
+		btnOK.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (homeFragment != null) {
+					if (!homeFragment.getIsConnect()) {
+						Toast.makeText(MainActivity.getMainActivity(), "请先连接！", Toast.LENGTH_LONG).show();
+						return;
+					}
+					byte[] bytesPwd;
+					try {
+						bytesPwd = etPassword.getText().toString().getBytes("UTF-8");
+						homeFragment.sendBytesBuffer = SendDataPackage.PackageSendData(
+								(byte) MainActivity.getMainActivity().ClientID, (byte) 0xff,
+								(byte) CommandType.ConfigInitialInfoPassword.getValue(), bytesPwd);
+						new Thread(homeFragment.sendBytesThread).start();
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		});
