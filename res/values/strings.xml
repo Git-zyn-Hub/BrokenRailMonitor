@@ -37,5 +37,6 @@
     <string name="unsubscribe">取消订阅所有铁轨信息</string>
     <string name="ok">确认</string>
     <string name="cancel">取消</string>
+    <string name="inputPwd">请输入密码</string>
 
 </resources>

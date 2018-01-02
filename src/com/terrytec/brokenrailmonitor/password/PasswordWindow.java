@@ -2,10 +2,8 @@ package com.terrytec.brokenrailmonitor.password;
 
 import com.terrytec.brokenrailmonitor.R;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.PopupWindow;
 
@@ -48,7 +46,7 @@ public class PasswordWindow extends PopupWindow {
 		}
 		View popupWindow_view = inflaterGlobal.inflate(R.layout.window_password, null, false);
 		// 创建PopupWindow实例,200,150分别是宽度和高度
-		pwdWindow = new PasswordWindow(popupWindow_view, 500, 300, true);
+		pwdWindow = new PasswordWindow(popupWindow_view, 500, 400, true);
 		// popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
 		// popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
 		// popupWindow.setContentView(LayoutInflater.from(this).inflate(R.layout.layout_popupwindow_style01,
