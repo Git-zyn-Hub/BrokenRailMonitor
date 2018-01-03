@@ -22,6 +22,7 @@ public class PasswordWindow extends PopupWindow {
 	// 声明PopupWindow对象的引用
 	private PasswordWindow pwdWindow;
 	private HomeFragment homeFragment;
+	private EditText etPassword;
 
 	/***
 	 * 获取PopupWindow实例
@@ -59,6 +60,8 @@ public class PasswordWindow extends PopupWindow {
 		View popupWindow_view = inflaterGlobal.inflate(R.layout.window_password, null, false);
 		// 创建PopupWindow实例,200,150分别是宽度和高度
 		pwdWindow = new PasswordWindow(popupWindow_view, 500, 400, true);
+		etPassword = (EditText) popupWindow_view.findViewById(R.id.etPassword);
+		pwdWindow.setEtPassword(etPassword);
 		// popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
 		// popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
 		// popupWindow.setContentView(LayoutInflater.from(this).inflate(R.layout.layout_popupwindow_style01,
@@ -94,7 +97,6 @@ public class PasswordWindow extends PopupWindow {
 			}
 		});
 
-		final EditText etPassword = (EditText) popupWindow_view.findViewById(R.id.etPassword);
 		final Button btnOK = (Button) popupWindow_view.findViewById(R.id.btnOK);
 		btnOK.setOnClickListener(new OnClickListener() {
 
@@ -118,5 +120,13 @@ public class PasswordWindow extends PopupWindow {
 				}
 			}
 		});
+	}
+
+	public void setEtPassword(EditText value) {
+		etPassword = value;
+	}
+
+	public void ClearPwdEditText() {
+		etPassword.setText("");
 	}
 }

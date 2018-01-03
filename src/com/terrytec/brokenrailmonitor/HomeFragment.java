@@ -19,8 +19,10 @@ import com.terrytec.brokenrailmonitor.classes.FileOperate;
 import com.terrytec.brokenrailmonitor.classes.FileServer;
 import com.terrytec.brokenrailmonitor.classes.MacAddress;
 import com.terrytec.brokenrailmonitor.classes.SendDataPackage;
+import com.terrytec.brokenrailmonitor.password.PasswordWindow;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -76,6 +78,7 @@ public class HomeFragment extends Fragment {
 	private PopupWindow popupWindow;
 	private LayoutInflater inflaterGlobal;
 	private Boolean isSubscribingAllRailInfo = false;
+	public Activity CurrentActivity = null;
 	// 本页面传递时的按钮btn的标志码
 	// private final static int request_Code = 11;
 	private OnClickListener btnEditListener = new OnClickListener() {
@@ -459,7 +462,9 @@ public class HomeFragment extends Fragment {
 									case GetPointRailInfo:
 										handlePointRailInfoData(receivedBytes);
 										break;
-
+									case ConfigInitialInfoPassword:
+										handleConfigInitialInfoPassword(receivedBytes);
+										break;
 									default:
 										break;
 									}
@@ -1084,6 +1089,19 @@ public class HomeFragment extends Fragment {
 		} else
 			((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg("终端及铁轨为空".getBytes(),
 					DataLevel.Error);
+	}
+
+	private void handleConfigInitialInfoPassword(byte[] data) {
+		TerminalCmdActivity currentActivity = (TerminalCmdActivity) CurrentActivity;
+		if (currentActivity != null) {
+			PasswordWindow pwdWindow = currentActivity.getPwdWindow();
+			if ((data[7] & 0xff) == 0xff) {
+				Toast.makeText(MainActivity.getMainActivity(), "密码错误", Toast.LENGTH_LONG).show();
+				pwdWindow.ClearPwdEditText();
+			} else if (data[7] == 0) {
+				pwdWindow.dismiss();
+			}
+		}
 	}
 
 	private int setMasterCtrlTemperature(byte tempe) {

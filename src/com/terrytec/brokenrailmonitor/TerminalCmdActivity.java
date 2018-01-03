@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
@@ -41,6 +40,7 @@ public class TerminalCmdActivity extends Activity {
 		setTitle();
 		setBtnListener();
 		homeFragment = ((HomeFragment) MainActivity.getMainActivity().homeFragment);
+		homeFragment.CurrentActivity = this;
 	}
 
 	private void setTitle() {
@@ -139,4 +139,8 @@ public class TerminalCmdActivity extends Activity {
 		public void onClick(View v) {
 		}
 	};
+
+	public PasswordWindow getPwdWindow() {
+		return pwdWindow;
+	}
 }
