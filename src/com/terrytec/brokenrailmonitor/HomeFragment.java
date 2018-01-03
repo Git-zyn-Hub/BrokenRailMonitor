@@ -435,6 +435,8 @@ public class HomeFragment extends Fragment {
 				case SEND: {
 					try {
 						byte[] receivedBytes = (byte[]) msg.obj;
+						((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg(receivedBytes,
+								DataLevel.Default);
 						if (receivedBytes.length > 5) {
 							if (receivedBytes[0] == 0x55 && (receivedBytes[1] & 0xFF) == 0xAA) {
 								switch (CommandType.valueOf(receivedBytes[5] & 0xFF)) {
@@ -451,6 +453,19 @@ public class HomeFragment extends Fragment {
 								default:
 									break;
 								}
+							} else if (receivedBytes[0] == 0x66 && (receivedBytes[1] & 0xFF) == 0xcc) {
+								if (checksumCalc(receivedBytes)) {
+									switch (CommandType.valueOf(receivedBytes[6] & 0xFF)) {
+									case GetPointRailInfo:
+										handlePointRailInfoData(receivedBytes);
+										break;
+
+									default:
+										break;
+									}
+								} else
+									((CommandFragment) MainActivity.getMainActivity().commandFragment)
+											.AddCmdMsg("校验和出错".getBytes(), DataLevel.Error);
 							}
 							String receiveStr = new String(receivedBytes);
 							if (receiveStr.length() > 6 && receiveStr.substring(0, 3).equals("###")) {
@@ -473,9 +488,6 @@ public class HomeFragment extends Fragment {
 							// }
 							// }
 						}
-						((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg(receivedBytes,
-								DataLevel.Default);
-						handleData(receivedBytes);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -912,176 +924,166 @@ public class HomeFragment extends Fragment {
 		return -1;
 	}
 
-	private void handleData(byte[] data) {
-		if (data.length > 1 && data[0] == 0x66 && (data[1] & 0xFF) == 0xcc) {
-			if (checksumCalc(data)) {
-				if (terminalAnd2Rails != null) {
-					int length = (data[2] << 8) + data[3];
-					byte[] content = new byte[length - 9];
-					byte[] bytesTemp = new byte[length - 9];
-					int contentLength = content.length;
-					for (int i = 7; i < length - 2; i++) {
-						bytesTemp[i - 7] = data[i];
-					}
-					for (int i = 0; i < contentLength; i += 10) {
-						for (int j = 0; j < 10; j++) {
-							content[i + j] = bytesTemp[contentLength - i - (10 - j)];
+	private void handlePointRailInfoData(byte[] data) {
+		if (terminalAnd2Rails != null) {
+			int length = (data[2] << 8) + data[3];
+			byte[] content = new byte[length - 9];
+			byte[] bytesTemp = new byte[length - 9];
+			int contentLength = content.length;
+			for (int i = 7; i < length - 2; i++) {
+				bytesTemp[i - 7] = data[i];
+			}
+			for (int i = 0; i < contentLength; i += 10) {
+				for (int j = 0; j < 10; j++) {
+					content[i + j] = bytesTemp[contentLength - i - (10 - j)];
+				}
+			}
+			if (contentLength % 10 == 0) {
+				if (contentLength == 10) {
+					int index = FindMasterControlIndex(content[0]);
+					if (index != -1) {
+						// 检查1号左侧铁轨
+						if (index != 0) {
+							// 第一个终端没有上边的铁轨
+							int onOffRailLeftUp = content[1] & 0x0f;
+							setRailLeftState(index - 1, onOffRailLeftUp);
 						}
-					}
-					if (contentLength % 10 == 0) {
-						if (contentLength == 10) {
-							int index = FindMasterControlIndex(content[0]);
-							if (index != -1) {
-								// 检查1号左侧铁轨
-								if (index != 0) {
-									// 第一个终端没有上边的铁轨
-									int onOffRailLeftUp = content[1] & 0x0f;
-									setRailLeftState(index - 1, onOffRailLeftUp);
-								}
-								if (index != terminalAnd2Rails.size() - 1) {
-									// 最后一个终端没有下边的铁轨
-									int onOffRailLeftDown = (content[1] & 0xf0) >> 4;
-									setRailLeftState(index, onOffRailLeftDown);
-								}
-								// 检查2号铁轨
-								if (index != 0) {
-									// 第一个终端没有左边的铁轨
-									int onOffRailRightUp = content[2] & 0x0f;
-									setRailRightState(index - 1, onOffRailRightUp);
-								}
-								if (index != terminalAnd2Rails.size() - 1) {
-									// 最后一个终端没有右边的铁轨
-									int onOffRailRightDown = (content[2] & 0xf0) >> 4;
-									setRailRightState(index, onOffRailRightDown);
-								}
-							} else
-								((CommandFragment) MainActivity.getMainActivity().commandFragment)
-										.AddCmdMsg("未找到数据中包含终端号所示终端".getBytes(), DataLevel.Error);
-							terminalAnd2Rails.get(index)
-									.setRailStressLeft(((content[3] & 0xff) << 8) + (content[4] & 0xff));
-							terminalAnd2Rails.get(index)
-									.setRailStressRight(((content[5] & 0xff) << 8) + (content[6] & 0xff));
-							terminalAnd2Rails.get(index).setRailTemperatureLeft(setMasterCtrlTemperature(content[7]));
-							terminalAnd2Rails.get(index).setRailTemperatureRight(setMasterCtrlTemperature(content[8]));
-							terminalAnd2Rails.get(index).setMCTemperature(setMasterCtrlTemperature(content[9]));
+						if (index != terminalAnd2Rails.size() - 1) {
+							// 最后一个终端没有下边的铁轨
+							int onOffRailLeftDown = (content[1] & 0xf0) >> 4;
+							setRailLeftState(index, onOffRailLeftDown);
+						}
+						// 检查2号铁轨
+						if (index != 0) {
+							// 第一个终端没有左边的铁轨
+							int onOffRailRightUp = content[2] & 0x0f;
+							setRailRightState(index - 1, onOffRailRightUp);
+						}
+						if (index != terminalAnd2Rails.size() - 1) {
+							// 最后一个终端没有右边的铁轨
+							int onOffRailRightDown = (content[2] & 0xf0) >> 4;
+							setRailRightState(index, onOffRailRightDown);
+						}
+					} else
+						((CommandFragment) MainActivity.getMainActivity().commandFragment)
+								.AddCmdMsg("未找到数据中包含终端号所示终端".getBytes(), DataLevel.Error);
+					terminalAnd2Rails.get(index).setRailStressLeft(((content[3] & 0xff) << 8) + (content[4] & 0xff));
+					terminalAnd2Rails.get(index).setRailStressRight(((content[5] & 0xff) << 8) + (content[6] & 0xff));
+					terminalAnd2Rails.get(index).setRailTemperatureLeft(setMasterCtrlTemperature(content[7]));
+					terminalAnd2Rails.get(index).setRailTemperatureRight(setMasterCtrlTemperature(content[8]));
+					terminalAnd2Rails.get(index).setMCTemperature(setMasterCtrlTemperature(content[9]));
 
+				} else {
+					// 如果有多个终端的数据，需要处理冲突。
+					for (int i = 0; i < contentLength - 10; i += 10) {
+						int index = FindMasterControlIndex(content[i]);
+
+						// 检查1号铁轨
+						if (i == 0 && index != 0) {
+							// 第一个终端没有左边的铁轨
+							int onOffRailLeftUp = content[1] & 0x0f;
+							setRailLeftState(index - 1, onOffRailLeftUp);
 						} else {
-							// 如果有多个终端的数据，需要处理冲突。
-							for (int i = 0; i < contentLength - 10; i += 10) {
-								int index = FindMasterControlIndex(content[i]);
-
-								// 检查1号铁轨
-								if (i == 0 && index != 0) {
-									// 第一个终端没有左边的铁轨
-									int onOffRailLeftUp = content[1] & 0x0f;
-									setRailLeftState(index - 1, onOffRailLeftUp);
-								} else {
-									if (((content[i + 1] & 0xf0) >> 4) == (content[i + 11] & 0x0f)) {
-										// 不冲突
-										int onOff = (content[i + 1] & 0xf0) >> 4;
-										setRailLeftState(index, onOff);
-									} else if (((content[i + 1] & 0xf0) >> 4) == 9 || (content[i + 11] & 0x0f) == 9) {
-										setRailLeftState(index, 9);
-									} else {
-										// 冲突
-										setRailLeftDifferent(index);
-										int tNo = terminalAnd2Rails.get(index).terminalNo;
-										int tNextNo = terminalAnd2Rails.get(index + 1).terminalNo;
-										String errorTerminal = "";
-										if ((content[i + 1] & 0xf0) == 0x70) {
-											errorTerminal = String.valueOf(tNo) + "号终端接收异常";
-										} else if ((content[i + 11] & 0x0f) == 0x07) {
-											errorTerminal = String.valueOf(tNextNo) + "号终端接收异常";
-										}
-										((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg(
+							if (((content[i + 1] & 0xf0) >> 4) == (content[i + 11] & 0x0f)) {
+								// 不冲突
+								int onOff = (content[i + 1] & 0xf0) >> 4;
+								setRailLeftState(index, onOff);
+							} else if (((content[i + 1] & 0xf0) >> 4) == 9 || (content[i + 11] & 0x0f) == 9) {
+								setRailLeftState(index, 9);
+							} else {
+								// 冲突
+								setRailLeftDifferent(index);
+								int tNo = terminalAnd2Rails.get(index).terminalNo;
+								int tNextNo = terminalAnd2Rails.get(index + 1).terminalNo;
+								String errorTerminal = "";
+								if ((content[i + 1] & 0xf0) == 0x70) {
+									errorTerminal = String.valueOf(tNo) + "号终端接收异常";
+								} else if ((content[i + 11] & 0x0f) == 0x07) {
+									errorTerminal = String.valueOf(tNextNo) + "号终端接收异常";
+								}
+								((CommandFragment) MainActivity.getMainActivity().commandFragment)
+										.AddCmdMsg(
 												(String.valueOf(tNo) + "号终端与" + String.valueOf(tNextNo)
 														+ "号终端之间的1号铁轨通断信息矛盾！" + errorTerminal + "，请检查").getBytes(),
 												DataLevel.Warning);
 
-									}
-								}
-								if (i == (contentLength - 20)) {
-									int indexLastTerminal = FindMasterControlIndex(content[i + 10]);
-									if (indexLastTerminal != terminalAnd2Rails.size() - 1) {
-										// 最后一个终端没有右边的铁轨
-										int onOffRailLeftDown = (content[i + 11] & 0xf0) >> 4;
-										setRailLeftState(indexLastTerminal, onOffRailLeftDown);
-									}
-								}
+							}
+						}
+						if (i == (contentLength - 20)) {
+							int indexLastTerminal = FindMasterControlIndex(content[i + 10]);
+							if (indexLastTerminal != terminalAnd2Rails.size() - 1) {
+								// 最后一个终端没有右边的铁轨
+								int onOffRailLeftDown = (content[i + 11] & 0xf0) >> 4;
+								setRailLeftState(indexLastTerminal, onOffRailLeftDown);
+							}
+						}
 
-								// 检查2号铁轨
-								if (i == 0 && index != 0) {
-									// 第一个终端没有左边的铁轨
-									int onOffRailRightUp = content[2] & 0x0f;
-									setRailRightState(index - 1, onOffRailRightUp);
-								} else {
-									if (((content[i + 2] & 0xf0) >> 4) == (content[i + 12] & 0x0f)) {
-										// 不冲突
-										int onOff = (content[i + 2] & 0xf0) >> 4;
-										setRailRightState(index, onOff);
-									} else if (((content[i + 2] & 0xf0) >> 4) == 9 || (content[i + 12] & 0x0f) == 9) {
-										setRailRightState(index, 9);
-									} else {
-										// 冲突
-										setRailRightDifferent(index);
-										int tNo = terminalAnd2Rails.get(index).terminalNo;
-										int tNextNo = terminalAnd2Rails.get(index + 1).terminalNo;
-										String errorTerminal = "";
-										if ((content[i + 2] & 0xf0) == 0x70) {
-											errorTerminal = String.valueOf(tNo) + "号终端接收异常";
-										} else if ((content[i + 12] & 0x0f) == 0x07) {
-											errorTerminal = String.valueOf(tNextNo) + "号终端接收异常";
-										}
-										((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg(
+						// 检查2号铁轨
+						if (i == 0 && index != 0) {
+							// 第一个终端没有左边的铁轨
+							int onOffRailRightUp = content[2] & 0x0f;
+							setRailRightState(index - 1, onOffRailRightUp);
+						} else {
+							if (((content[i + 2] & 0xf0) >> 4) == (content[i + 12] & 0x0f)) {
+								// 不冲突
+								int onOff = (content[i + 2] & 0xf0) >> 4;
+								setRailRightState(index, onOff);
+							} else if (((content[i + 2] & 0xf0) >> 4) == 9 || (content[i + 12] & 0x0f) == 9) {
+								setRailRightState(index, 9);
+							} else {
+								// 冲突
+								setRailRightDifferent(index);
+								int tNo = terminalAnd2Rails.get(index).terminalNo;
+								int tNextNo = terminalAnd2Rails.get(index + 1).terminalNo;
+								String errorTerminal = "";
+								if ((content[i + 2] & 0xf0) == 0x70) {
+									errorTerminal = String.valueOf(tNo) + "号终端接收异常";
+								} else if ((content[i + 12] & 0x0f) == 0x07) {
+									errorTerminal = String.valueOf(tNextNo) + "号终端接收异常";
+								}
+								((CommandFragment) MainActivity.getMainActivity().commandFragment)
+										.AddCmdMsg(
 												(String.valueOf(tNo) + "号终端与" + String.valueOf(tNextNo)
 														+ "号终端之间的2号铁轨通断信息矛盾！" + errorTerminal + "，请检查").getBytes(),
 												DataLevel.Warning);
-									}
-								}
-								if (i == (contentLength - 20)) {
-									int indexLastTerminal = FindMasterControlIndex(content[i + 10]);
-									if (indexLastTerminal != terminalAnd2Rails.size() - 1) {
-										// 最后一个终端没有右边的铁轨
-										int onOffRail2Right = (content[i + 12] & 0xf0) >> 4;
-										setRailRightState(indexLastTerminal, onOffRail2Right);
-									}
-								}
-								terminalAnd2Rails.get(index)
-										.setRailStressLeft(((content[i + 3] & 0xff) << 8) + (content[i + 4] & 0xff));
-								terminalAnd2Rails.get(index)
-										.setRailStressRight(((content[i + 5] & 0xff) << 8) + (content[i + 6] & 0xff));
-								terminalAnd2Rails.get(index)
-										.setRailTemperatureLeft(setMasterCtrlTemperature(content[i + 7]));
-								terminalAnd2Rails.get(index)
-										.setRailTemperatureRight(setMasterCtrlTemperature(content[i + 8]));
-								terminalAnd2Rails.get(index).setMCTemperature(setMasterCtrlTemperature(content[i + 9]));
-								if (i == (contentLength - 20)) {
-									index = FindMasterControlIndex(content[i + 10]);
-									terminalAnd2Rails.get(index).setRailStressLeft(
-											((content[i + 13] & 0xff) << 8) + (content[i + 14] & 0xff));
-									terminalAnd2Rails.get(index).setRailStressRight(
-											((content[i + 15] & 0xff) << 8) + (content[i + 16] & 0xff));
-									terminalAnd2Rails.get(index)
-											.setRailTemperatureLeft(setMasterCtrlTemperature(content[i + 17]));
-									terminalAnd2Rails.get(index)
-											.setRailTemperatureRight(setMasterCtrlTemperature(content[i + 18]));
-									terminalAnd2Rails.get(index)
-											.setMCTemperature(setMasterCtrlTemperature(content[i + 19]));
-								}
 							}
 						}
-					} else
-						((CommandFragment) MainActivity.getMainActivity().commandFragment)
-								.AddCmdMsg("发送数据内容的长度错误，应该是10的倍数".getBytes(), DataLevel.Error);
-
-				} else
-					((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg("终端及铁轨为空".getBytes(),
-							DataLevel.Error);
+						if (i == (contentLength - 20)) {
+							int indexLastTerminal = FindMasterControlIndex(content[i + 10]);
+							if (indexLastTerminal != terminalAnd2Rails.size() - 1) {
+								// 最后一个终端没有右边的铁轨
+								int onOffRail2Right = (content[i + 12] & 0xf0) >> 4;
+								setRailRightState(indexLastTerminal, onOffRail2Right);
+							}
+						}
+						terminalAnd2Rails.get(index)
+								.setRailStressLeft(((content[i + 3] & 0xff) << 8) + (content[i + 4] & 0xff));
+						terminalAnd2Rails.get(index)
+								.setRailStressRight(((content[i + 5] & 0xff) << 8) + (content[i + 6] & 0xff));
+						terminalAnd2Rails.get(index).setRailTemperatureLeft(setMasterCtrlTemperature(content[i + 7]));
+						terminalAnd2Rails.get(index).setRailTemperatureRight(setMasterCtrlTemperature(content[i + 8]));
+						terminalAnd2Rails.get(index).setMCTemperature(setMasterCtrlTemperature(content[i + 9]));
+						if (i == (contentLength - 20)) {
+							index = FindMasterControlIndex(content[i + 10]);
+							terminalAnd2Rails.get(index)
+									.setRailStressLeft(((content[i + 13] & 0xff) << 8) + (content[i + 14] & 0xff));
+							terminalAnd2Rails.get(index)
+									.setRailStressRight(((content[i + 15] & 0xff) << 8) + (content[i + 16] & 0xff));
+							terminalAnd2Rails.get(index)
+									.setRailTemperatureLeft(setMasterCtrlTemperature(content[i + 17]));
+							terminalAnd2Rails.get(index)
+									.setRailTemperatureRight(setMasterCtrlTemperature(content[i + 18]));
+							terminalAnd2Rails.get(index).setMCTemperature(setMasterCtrlTemperature(content[i + 19]));
+						}
+					}
+				}
 			} else
-				((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg("校验和出错".getBytes(),
-						DataLevel.Error);
-		}
+				((CommandFragment) MainActivity.getMainActivity().commandFragment)
+						.AddCmdMsg("发送数据内容的长度错误，应该是10的倍数".getBytes(), DataLevel.Error);
 
+		} else
+			((CommandFragment) MainActivity.getMainActivity().commandFragment).AddCmdMsg("终端及铁轨为空".getBytes(),
+					DataLevel.Error);
 	}
 
 	private int setMasterCtrlTemperature(byte tempe) {

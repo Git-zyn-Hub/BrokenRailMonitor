@@ -216,6 +216,8 @@ public class CommandFragment extends Fragment {
 					}
 				}
 			}
+			case ConfigInitialInfoPassword:
+				return "发送配置初始信息密码";
 			default:
 				return null;
 			}
@@ -266,6 +268,13 @@ public class CommandFragment extends Fragment {
 				return "擦除flash";
 			case ErrorReport:
 				return String.valueOf(data[7] & 0xFF) + "号终端失联，未收到其返回的数据！";
+			case ConfigInitialInfoPassword: {
+				if ((data[7] & 0xff) == 0xff) {
+					return "配置初始信息密码错误";
+				} else if (data[7] == 0) {
+					return "配置初始信息密码正确";
+				}
+			}
 			default:
 				return null;
 			}
@@ -301,6 +310,7 @@ public class CommandFragment extends Fragment {
 					}
 				}
 			}
+			case ConfigInitialInfoPassword:
 			default:
 				return DataLevel.Default;
 			}
@@ -334,6 +344,13 @@ public class CommandFragment extends Fragment {
 			case EraseFlash:
 			case ErrorReport:
 				return DataLevel.Error;
+			case ConfigInitialInfoPassword: {
+				if ((data[7] & 0xff) == 0xff) {
+					return DataLevel.Error;
+				} else if (data[7] == 0) {
+					return DataLevel.Normal;
+				}
+			}
 			default:
 				return DataLevel.Default;
 			}
