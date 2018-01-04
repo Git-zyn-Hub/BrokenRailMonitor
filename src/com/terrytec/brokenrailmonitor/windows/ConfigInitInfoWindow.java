@@ -1,5 +1,6 @@
 package com.terrytec.brokenrailmonitor.windows;
 
+import com.terrytec.brokenrailmonitor.EditTerminalActivity;
 import com.terrytec.brokenrailmonitor.HomeFragment;
 import com.terrytec.brokenrailmonitor.MainActivity;
 import com.terrytec.brokenrailmonitor.R;
@@ -9,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 public class ConfigInitInfoWindow extends PopupWindow {
 
@@ -112,6 +114,28 @@ public class ConfigInitInfoWindow extends PopupWindow {
 
 			@Override
 			public void onClick(View v) {
+				if (isEmpty(ciiWindow.getEtNeighbourSmallSecondary(),
+						homeFragment.getResources().getString(R.string.NeighbourSmallSecondary))
+						|| isEmpty(ciiWindow.getEtNeighbourSmallPrimary(),
+								homeFragment.getResources().getString(R.string.neighbourSmall))
+						|| isEmpty(ciiWindow.getEtThisTerminal(),
+								homeFragment.getResources().getString(R.string.ThisTerminal))
+						|| isEmpty(ciiWindow.getEtNeighbourBigPrimary(),
+								homeFragment.getResources().getString(R.string.neighbourBig))
+						|| isEmpty(ciiWindow.getEtNeighbourBigSecondary(),
+								homeFragment.getResources().getString(R.string.NeighbourBigSecondary)))
+					return;
+				if (isOutOfRange(ciiWindow.getEtNeighbourSmallSecondary(),
+						homeFragment.getResources().getString(R.string.NeighbourSmallSecondary))
+						|| isOutOfRange(ciiWindow.getEtNeighbourSmallPrimary(),
+								homeFragment.getResources().getString(R.string.neighbourSmall))
+						|| isOutOfRange(ciiWindow.getEtThisTerminal(),
+								homeFragment.getResources().getString(R.string.ThisTerminal))
+						|| isOutOfRange(ciiWindow.getEtNeighbourBigPrimary(),
+								homeFragment.getResources().getString(R.string.neighbourBig))
+						|| isOutOfRange(ciiWindow.getEtNeighbourBigSecondary(),
+								homeFragment.getResources().getString(R.string.NeighbourBigSecondary)))
+					return;
 			}
 		});
 	}
@@ -148,6 +172,30 @@ public class ConfigInitInfoWindow extends PopupWindow {
 						.setText(String.valueOf(homeFragment.terminalAnd2Rails.get(index + 2).terminalNo));
 			}
 		}
+	}
+
+	private boolean isOutOfRange(EditText inputET, String etName) {
+		try {
+			String inputString = inputET.getText().toString().trim();
+			int inputInt = Integer.parseInt(inputString);
+			if (inputInt < 0 || inputInt > 255) {
+				Toast.makeText(MainActivity.getMainActivity(), "请在‘" + etName + "’输入0到255之间的整数", Toast.LENGTH_LONG).show();
+				return true;
+			}else
+				return false;
+		} catch (NumberFormatException e) {
+			Toast.makeText(MainActivity.getMainActivity(), "请在‘" + etName + "’输入正确的整数", Toast.LENGTH_LONG).show();
+			return false;
+		}
+	}
+
+	private boolean isEmpty(EditText inputET, String etName) {
+		String inputString = inputET.getText().toString().trim();
+		if (inputString.length() == 0) {
+			Toast.makeText(MainActivity.getMainActivity(), etName + " 不能为空！", Toast.LENGTH_LONG).show();
+			return true;
+		}
+		return false;
 	}
 
 	private void setEtNeighbourSmallSecondary(EditText value) {
