@@ -2,7 +2,7 @@ package com.terrytec.brokenrailmonitor;
 
 import com.terrytec.brokenrailmonitor.Enums.CommandType;
 import com.terrytec.brokenrailmonitor.classes.SendDataPackage;
-import com.terrytec.brokenrailmonitor.password.PasswordWindow;
+import com.terrytec.brokenrailmonitor.windows.PasswordWindow;
 
 import android.app.Activity;
 import android.content.Intent;

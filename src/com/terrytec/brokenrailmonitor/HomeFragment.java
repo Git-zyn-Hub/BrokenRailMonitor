@@ -19,7 +19,7 @@ import com.terrytec.brokenrailmonitor.classes.FileOperate;
 import com.terrytec.brokenrailmonitor.classes.FileServer;
 import com.terrytec.brokenrailmonitor.classes.MacAddress;
 import com.terrytec.brokenrailmonitor.classes.SendDataPackage;
-import com.terrytec.brokenrailmonitor.password.PasswordWindow;
+import com.terrytec.brokenrailmonitor.windows.PasswordWindow;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

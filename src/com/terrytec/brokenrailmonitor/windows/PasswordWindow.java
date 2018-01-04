@@ -1,4 +1,4 @@
-package com.terrytec.brokenrailmonitor.password;
+package com.terrytec.brokenrailmonitor.windows;
 
 import com.terrytec.brokenrailmonitor.HomeFragment;
 import com.terrytec.brokenrailmonitor.MainActivity;
