@@ -38,5 +38,9 @@
     <string name="ok">确认</string>
     <string name="cancel">取消</string>
     <string name="inputPwd">请输入密码</string>
+    <string name="configInitInfo">初始信息配置</string>
+    <string name="NeighbourSmallSecondary">次级相邻小终端</string>
+    <string name="NeighbourBigSecondary">次级相邻大终端</string>
+    <string name="ThisTerminal">本终端</string>
 
 </resources>

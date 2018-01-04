@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="500dp"
+    android:layout_height="400dp"
+    android:background="@android:color/darker_gray"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/configInitInfo" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="top"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginTop="7dp"
+                android:text="@string/NeighbourSmallSecondary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="@string/neighbourSmall" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="@string/ThisTerminal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="@string/neighbourBig" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="@string/NeighbourBigSecondary" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="top"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/etNeighbourSmallSecondary"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:inputType="number"
+                android:labelFor="@id/etNeighbourSmallSecondary"
+                android:paddingBottom="0dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:paddingTop="0dp" />
+
+            <EditText
+                android:id="@+id/etNeighbourSmallPrimary"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:inputType="number"
+                android:labelFor="@id/etNeighbourSmallPrimary"
+                android:paddingBottom="0dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:paddingTop="0dp" />
+
+            <EditText
+                android:id="@+id/etThisTerminal"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:inputType="number"
+                android:labelFor="@id/etThisTerminal"
+                android:paddingBottom="0dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:paddingTop="0dp" />
+
+            <EditText
+                android:id="@+id/etNeighbourBigPrimary"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:inputType="number"
+                android:labelFor="@id/etNeighbourBigPrimary"
+                android:paddingBottom="0dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:paddingTop="0dp" />
+
+            <EditText
+                android:id="@+id/etNeighbourBigSecondary"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:inputType="number"
+                android:labelFor="@id/etNeighbourBigSecondary"
+                android:paddingBottom="0dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:paddingTop="0dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btnOK"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_background"
+            android:text="@string/ok" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/button_background"
+            android:text="@string/cancel" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -19,6 +19,7 @@ import com.terrytec.brokenrailmonitor.classes.FileOperate;
 import com.terrytec.brokenrailmonitor.classes.FileServer;
 import com.terrytec.brokenrailmonitor.classes.MacAddress;
 import com.terrytec.brokenrailmonitor.classes.SendDataPackage;
+import com.terrytec.brokenrailmonitor.windows.ConfigInitInfoWindow;
 import com.terrytec.brokenrailmonitor.windows.PasswordWindow;
 
 import android.annotation.SuppressLint;
@@ -1100,6 +1101,15 @@ public class HomeFragment extends Fragment {
 				pwdWindow.ClearPwdEditText();
 			} else if (data[7] == 0) {
 				pwdWindow.dismiss();
+
+				ConfigInitInfoWindow ciInfoWindow = new ConfigInitInfoWindow();
+				ciInfoWindow.setLayoutInflater(inflaterGlobal);
+				if (CurrentActivity != null) {
+					TerminalCmdActivity tca = (TerminalCmdActivity) CurrentActivity;
+					ciInfoWindow.setTerminalNo(tca.getTerminalNo());
+					ciInfoWindow = ciInfoWindow.getConfigInitInfoWindow();
+					ciInfoWindow.showAtLocation(CurrentActivity.getWindow().getDecorView(), Gravity.CENTER, 0, 0);
+				}
 			}
 		}
 	}

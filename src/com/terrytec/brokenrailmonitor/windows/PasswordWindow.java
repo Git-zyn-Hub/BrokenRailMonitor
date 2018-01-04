@@ -24,13 +24,13 @@ public class PasswordWindow extends PopupWindow {
 	private HomeFragment homeFragment;
 	private EditText etPassword;
 
-	/***
-	 * 获取PopupWindow实例
-	 */
 	public void setLayoutInflater(LayoutInflater inflater) {
 		inflaterGlobal = inflater;
 	}
 
+	/***
+	 * 获取PasswordWindow实例
+	 */
 	public PasswordWindow getPasswordWindow() {
 		if (null != pwdWindow) {
 			return pwdWindow;

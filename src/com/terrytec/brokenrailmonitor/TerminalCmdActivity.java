@@ -143,4 +143,8 @@ public class TerminalCmdActivity extends Activity {
 	public PasswordWindow getPwdWindow() {
 		return pwdWindow;
 	}
+	
+	public int getTerminalNo() {
+		return terminalNo;
+	}
 }
