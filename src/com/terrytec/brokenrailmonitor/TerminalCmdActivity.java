@@ -94,12 +94,6 @@ public class TerminalCmdActivity extends Activity {
 				pwdWindow.setLayoutInflater(inflater);
 				pwdWindow = pwdWindow.getPasswordWindow();
 				pwdWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
-				// homeFragment.sendBytesBuffer =
-				// SendDataPackage.PackageSendData(
-				// (byte) MainActivity.getMainActivity().ClientID, (byte) 0xff,
-				// (byte) CommandType.RequestConfig.getValue(), new byte[] {
-				// 0x48, 0x5f });
-				// new Thread(homeFragment.sendBytesThread).start();
 			} catch (Exception e) {
 				e.getStackTrace();
 			}
@@ -113,7 +107,8 @@ public class TerminalCmdActivity extends Activity {
 				Toast.makeText(MainActivity.getMainActivity(), "请先连接！", Toast.LENGTH_LONG).show();
 				return;
 			}
-			homeFragment.sendBytesBuffer = SendDataPackage.PackageSendData((byte) 0xff, (byte) terminalNo,
+			homeFragment.sendBytesBuffer = SendDataPackage.PackageSendData(
+					(byte) MainActivity.getMainActivity().ClientID, (byte) terminalNo,
 					(byte) CommandType.ReadPointInfo.getValue(), new byte[] { (byte) terminalNo });
 			new Thread(homeFragment.sendBytesThread).start();
 		}
@@ -127,7 +122,8 @@ public class TerminalCmdActivity extends Activity {
 				Toast.makeText(MainActivity.getMainActivity(), "请先连接！", Toast.LENGTH_LONG).show();
 				return;
 			}
-			homeFragment.sendBytesBuffer = SendDataPackage.PackageSendData((byte) 0xff, (byte) terminalNo,
+			homeFragment.sendBytesBuffer = SendDataPackage.PackageSendData(
+					(byte) MainActivity.getMainActivity().ClientID, (byte) terminalNo,
 					(byte) CommandType.GetPointRailInfo.getValue(), new byte[] { 0, 0 });
 			new Thread(homeFragment.sendBytesThread).start();
 
@@ -143,7 +139,7 @@ public class TerminalCmdActivity extends Activity {
 	public PasswordWindow getPwdWindow() {
 		return pwdWindow;
 	}
-	
+
 	public int getTerminalNo() {
 		return terminalNo;
 	}

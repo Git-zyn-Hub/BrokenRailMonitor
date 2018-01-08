@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class TerminalAnd2Rails extends RelativeLayout {
 
@@ -28,6 +29,7 @@ public class TerminalAnd2Rails extends RelativeLayout {
 	public boolean is4G;
 	public boolean isEnd;
 
+	public boolean isOnline = false;
 	public Button btnTerminal;
 	public ImageView ivAccessPoint;
 
@@ -72,14 +74,17 @@ public class TerminalAnd2Rails extends RelativeLayout {
 					// 设置传递参数
 					MainActivity.getMainActivity().startActivity(intent);// 不需要接收返回值时使用
 				} else {
-					// Intent是系统各组件之间进行数据传递的数据负载者，即通信使者
-					Intent intent = new Intent();
+					if (isOnline) {
+						// Intent是系统各组件之间进行数据传递的数据负载者，即通信使者
+						Intent intent = new Intent();
 
-					// 设置页面转向
-					intent.setClass(MainActivity.getMainActivity(), TerminalCmdActivity.class);
-					intent.putExtra("terminalNo", String.valueOf(terminalNo));
-					// 设置传递参数
-					MainActivity.getMainActivity().startActivity(intent);// 不需要接收返回值时使用
+						// 设置页面转向
+						intent.setClass(MainActivity.getMainActivity(), TerminalCmdActivity.class);
+						intent.putExtra("terminalNo", String.valueOf(terminalNo));
+						// 设置传递参数
+						MainActivity.getMainActivity().startActivity(intent);// 不需要接收返回值时使用
+					} else
+						Toast.makeText(MainActivity.getMainActivity(), "终端不在线！", Toast.LENGTH_LONG).show();
 				}
 
 			} catch (Exception e) {
@@ -180,6 +185,7 @@ public class TerminalAnd2Rails extends RelativeLayout {
 	}
 
 	public void setAccessPointConnect() {
+		isOnline = true;
 		if (ivAccessPoint != null) {
 			if (timer != null) {
 				if (task != null)
@@ -200,6 +206,7 @@ public class TerminalAnd2Rails extends RelativeLayout {
 	}
 
 	public void setAccessPointNotConnect() {
+		isOnline = false;
 		if (ivAccessPoint != null) {
 			if (timer != null) {
 				if (task != null)

@@ -1,9 +1,12 @@
 package com.terrytec.brokenrailmonitor.windows;
 
 import com.terrytec.brokenrailmonitor.EditTerminalActivity;
+import com.terrytec.brokenrailmonitor.Enums.CommandType;
 import com.terrytec.brokenrailmonitor.HomeFragment;
 import com.terrytec.brokenrailmonitor.MainActivity;
 import com.terrytec.brokenrailmonitor.R;
+import com.terrytec.brokenrailmonitor.classes.SendDataPackage;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -125,17 +128,30 @@ public class ConfigInitInfoWindow extends PopupWindow {
 						|| isEmpty(ciiWindow.getEtNeighbourBigSecondary(),
 								homeFragment.getResources().getString(R.string.NeighbourBigSecondary)))
 					return;
+				Integer intNbSmallSecond = 0;
+				Integer intNbSmallPrimary = 0;
+				Integer intThisTerminal = 0;
+				Integer intNbBigPrimary = 0;
+				Integer intNbBigSecond = 0;
 				if (isOutOfRange(ciiWindow.getEtNeighbourSmallSecondary(),
-						homeFragment.getResources().getString(R.string.NeighbourSmallSecondary))
+						homeFragment.getResources().getString(R.string.NeighbourSmallSecondary), intNbSmallSecond)
 						|| isOutOfRange(ciiWindow.getEtNeighbourSmallPrimary(),
-								homeFragment.getResources().getString(R.string.neighbourSmall))
+								homeFragment.getResources().getString(R.string.neighbourSmall), intNbSmallPrimary)
 						|| isOutOfRange(ciiWindow.getEtThisTerminal(),
-								homeFragment.getResources().getString(R.string.ThisTerminal))
+								homeFragment.getResources().getString(R.string.ThisTerminal), intThisTerminal)
 						|| isOutOfRange(ciiWindow.getEtNeighbourBigPrimary(),
-								homeFragment.getResources().getString(R.string.neighbourBig))
+								homeFragment.getResources().getString(R.string.neighbourBig), intNbBigPrimary)
 						|| isOutOfRange(ciiWindow.getEtNeighbourBigSecondary(),
-								homeFragment.getResources().getString(R.string.NeighbourBigSecondary)))
+								homeFragment.getResources().getString(R.string.NeighbourBigSecondary), intNbBigSecond))
 					return;
+				homeFragment.sendBytesBuffer = SendDataPackage.PackageSendData(
+						(byte) MainActivity.getMainActivity().ClientID, (byte) terminalNo,
+						(byte) CommandType.ConfigInitialInfo.getValue(),
+						new byte[] { Byte.valueOf(intThisTerminal.toString()),
+								Byte.valueOf(intNbSmallSecond.toString()), Byte.valueOf(intNbSmallPrimary.toString()),
+								Byte.valueOf(intNbBigPrimary.toString()), Byte.valueOf(intNbBigSecond.toString()),
+								(byte) 0x00 });
+				new Thread(homeFragment.sendBytesThread).start();
 			}
 		});
 	}
@@ -174,14 +190,16 @@ public class ConfigInitInfoWindow extends PopupWindow {
 		}
 	}
 
-	private boolean isOutOfRange(EditText inputET, String etName) {
+	private boolean isOutOfRange(EditText inputET, String etName, Integer value) {
 		try {
 			String inputString = inputET.getText().toString().trim();
 			int inputInt = Integer.parseInt(inputString);
+			value = inputInt;
 			if (inputInt < 0 || inputInt > 255) {
-				Toast.makeText(MainActivity.getMainActivity(), "请在‘" + etName + "’输入0到255之间的整数", Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.getMainActivity(), "请在‘" + etName + "’输入0到255之间的整数", Toast.LENGTH_LONG)
+						.show();
 				return true;
-			}else
+			} else
 				return false;
 		} catch (NumberFormatException e) {
 			Toast.makeText(MainActivity.getMainActivity(), "请在‘" + etName + "’输入正确的整数", Toast.LENGTH_LONG).show();
