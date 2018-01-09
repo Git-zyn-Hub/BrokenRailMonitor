@@ -2,6 +2,7 @@ package com.terrytec.brokenrailmonitor;
 
 import com.terrytec.brokenrailmonitor.Enums.CommandType;
 import com.terrytec.brokenrailmonitor.classes.SendDataPackage;
+import com.terrytec.brokenrailmonitor.windows.GetDateAndTimeWindow;
 import com.terrytec.brokenrailmonitor.windows.PasswordWindow;
 
 import android.app.Activity;
@@ -24,6 +25,7 @@ public class TerminalCmdActivity extends Activity {
 	private int terminalNo;
 	private HomeFragment homeFragment;
 	private PasswordWindow pwdWindow = new PasswordWindow();
+	private GetDateAndTimeWindow gdTimeWindow = new GetDateAndTimeWindow();
 	// private Button btnBack;
 
 	@Override
@@ -41,6 +43,7 @@ public class TerminalCmdActivity extends Activity {
 		setBtnListener();
 		homeFragment = ((HomeFragment) MainActivity.getMainActivity().homeFragment);
 		homeFragment.CurrentActivity = this;
+		gdTimeWindow.setActivity(this);
 	}
 
 	private void setTitle() {
@@ -133,6 +136,14 @@ public class TerminalCmdActivity extends Activity {
 
 		@Override
 		public void onClick(View v) {
+			if (!homeFragment.getIsConnect()) {
+				Toast.makeText(MainActivity.getMainActivity(), "«Îœ»¡¨Ω”£°", Toast.LENGTH_LONG).show();
+				return;
+			}
+			LayoutInflater inflater = getLayoutInflater();
+			gdTimeWindow.setLayoutInflater(inflater);
+			gdTimeWindow = gdTimeWindow.getGetDateAndTimeWindow();
+			gdTimeWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
 		}
 	};
 

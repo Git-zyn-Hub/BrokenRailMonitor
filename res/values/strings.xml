@@ -42,5 +42,10 @@
     <string name="NeighbourSmallSecondary">次级相邻小终端</string>
     <string name="NeighbourBigSecondary">次级相邻大终端</string>
     <string name="ThisTerminal">本终端</string>
+    <string name="inputDateAndTime">请选择起始时间和结束时间</string>
+    <string name="inputDateStart">选择起始日期</string>
+    <string name="inputDateEnd">选择结束日期</string>
+    <string name="inputTimeStart">选择起始时间</string>
+    <string name="inputTimeEnd">选择结束时间</string>
 
 </resources>

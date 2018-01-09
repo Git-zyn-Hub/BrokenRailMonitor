@@ -1,6 +1,5 @@
 package com.terrytec.brokenrailmonitor.windows;
 
-import com.terrytec.brokenrailmonitor.EditTerminalActivity;
 import com.terrytec.brokenrailmonitor.Enums.CommandType;
 import com.terrytec.brokenrailmonitor.HomeFragment;
 import com.terrytec.brokenrailmonitor.MainActivity;
