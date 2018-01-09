@@ -128,11 +128,11 @@ public class ConfigInitInfoWindow extends PopupWindow {
 						|| isEmpty(ciiWindow.getEtNeighbourBigSecondary(),
 								homeFragment.getResources().getString(R.string.NeighbourBigSecondary)))
 					return;
-				Integer intNbSmallSecond = 0;
-				Integer intNbSmallPrimary = 0;
-				Integer intThisTerminal = 0;
-				Integer intNbBigPrimary = 0;
-				Integer intNbBigSecond = 0;
+				IntegerClass intNbSmallSecond = new IntegerClass();
+				IntegerClass intNbSmallPrimary = new IntegerClass();
+				IntegerClass intThisTerminal = new IntegerClass();
+				IntegerClass intNbBigPrimary = new IntegerClass();
+				IntegerClass intNbBigSecond = new IntegerClass();
 				if (isOutOfRange(ciiWindow.getEtNeighbourSmallSecondary(),
 						homeFragment.getResources().getString(R.string.NeighbourSmallSecondary), intNbSmallSecond)
 						|| isOutOfRange(ciiWindow.getEtNeighbourSmallPrimary(),
@@ -147,10 +147,11 @@ public class ConfigInitInfoWindow extends PopupWindow {
 				homeFragment.sendBytesBuffer = SendDataPackage.PackageSendData(
 						(byte) MainActivity.getMainActivity().ClientID, (byte) terminalNo,
 						(byte) CommandType.ConfigInitialInfo.getValue(),
-						new byte[] { Byte.valueOf(intThisTerminal.toString()),
-								Byte.valueOf(intNbSmallSecond.toString()), Byte.valueOf(intNbSmallPrimary.toString()),
-								Byte.valueOf(intNbBigPrimary.toString()), Byte.valueOf(intNbBigSecond.toString()),
-								(byte) 0x00 });
+						new byte[] { Byte.valueOf(intThisTerminal.integer.toString()),
+								Byte.valueOf(intNbSmallSecond.integer.toString()),
+								Byte.valueOf(intNbSmallPrimary.integer.toString()),
+								Byte.valueOf(intNbBigPrimary.integer.toString()),
+								Byte.valueOf(intNbBigSecond.integer.toString()), (byte) 0x00 });
 				new Thread(homeFragment.sendBytesThread).start();
 			}
 		});
@@ -190,11 +191,11 @@ public class ConfigInitInfoWindow extends PopupWindow {
 		}
 	}
 
-	private boolean isOutOfRange(EditText inputET, String etName, Integer value) {
+	private boolean isOutOfRange(EditText inputET, String etName, IntegerClass ic) {
 		try {
 			String inputString = inputET.getText().toString().trim();
 			int inputInt = Integer.parseInt(inputString);
-			value = inputInt;
+			ic.integer = inputInt;
 			if (inputInt < 0 || inputInt > 255) {
 				Toast.makeText(MainActivity.getMainActivity(), "请在‘" + etName + "’输入0到255之间的整数", Toast.LENGTH_LONG)
 						.show();
@@ -263,4 +264,8 @@ public class ConfigInitInfoWindow extends PopupWindow {
 	public ConfigInitInfoWindow getCiiWindow() {
 		return ciiWindow;
 	}
+}
+
+class IntegerClass {
+	Integer integer;
 }
