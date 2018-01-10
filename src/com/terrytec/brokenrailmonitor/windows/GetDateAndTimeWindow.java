@@ -1,12 +1,15 @@
 package com.terrytec.brokenrailmonitor.windows;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import org.w3c.dom.Text;
 
 import com.terrytec.brokenrailmonitor.HomeFragment;
 import com.terrytec.brokenrailmonitor.MainActivity;
 import com.terrytec.brokenrailmonitor.R;
+import com.terrytec.brokenrailmonitor.Enums.CommandType;
+import com.terrytec.brokenrailmonitor.classes.SendDataPackage;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -19,6 +22,7 @@ import android.widget.DatePicker;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 public class GetDateAndTimeWindow extends PopupWindow {
 
@@ -31,6 +35,9 @@ public class GetDateAndTimeWindow extends PopupWindow {
 	private TextView tvDateEnd;
 	private TextView tvTimeEnd;
 	private Activity activity;
+	private Calendar dateTimeStart = Calendar.getInstance();
+	private Calendar dateTimeEnd = Calendar.getInstance();
+	private int terminalNo;
 
 	public GetDateAndTimeWindow() {
 	}
@@ -72,33 +79,33 @@ public class GetDateAndTimeWindow extends PopupWindow {
 		gdTimeWindow.setTvTimeStart(tvTimeStart);
 		gdTimeWindow.setTvDateEnd(tvDateEnd);
 		gdTimeWindow.setTvTimeEnd(tvTimeEnd);
-		final Calendar calendar = Calendar.getInstance();
+
 		gdTimeWindow.getTvDateStart().setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				showDatePickerDialog(activity, 2, gdTimeWindow.getTvDateStart(), calendar);
+				showDatePickerDialog(activity, 2, gdTimeWindow.getTvDateStart(), dateTimeStart);
 			}
 		});
 		gdTimeWindow.getTvTimeStart().setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				showTimePickerDialog(activity, 2, gdTimeWindow.getTvTimeStart(), calendar);
+				showTimePickerDialog(activity, 2, gdTimeWindow.getTvTimeStart(), dateTimeStart);
 			}
 		});
 		gdTimeWindow.getTvDateEnd().setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				showDatePickerDialog(activity, 2, gdTimeWindow.getTvDateEnd(), calendar);
+				showDatePickerDialog(activity, 2, gdTimeWindow.getTvDateEnd(), dateTimeEnd);
 			}
 		});
 		gdTimeWindow.getTvTimeEnd().setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				showTimePickerDialog(activity, 2, gdTimeWindow.getTvTimeEnd(), calendar);
+				showTimePickerDialog(activity, 2, gdTimeWindow.getTvTimeEnd(), dateTimeEnd);
 			}
 		});
 		// popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -141,7 +148,24 @@ public class GetDateAndTimeWindow extends PopupWindow {
 
 			@Override
 			public void onClick(View v) {
-
+				if (!homeFragment.getIsConnect()) {
+					Toast.makeText(MainActivity.getMainActivity(), "请先连接！", Toast.LENGTH_LONG).show();
+					return;
+				}
+				homeFragment.sendBytesBuffer = SendDataPackage.PackageSendData(
+						(byte) MainActivity.getMainActivity().ClientID, (byte) terminalNo,
+						(byte) CommandType.GetHistory.getValue(),
+						new byte[] { (byte) (dateTimeStart.get(Calendar.YEAR) % 100),
+								(byte) (dateTimeStart.get(Calendar.MONTH) + 1),
+								(byte) dateTimeStart.get(Calendar.DAY_OF_MONTH),
+								(byte) dateTimeStart.get(Calendar.HOUR_OF_DAY),
+								(byte) dateTimeStart.get(Calendar.MINUTE), (byte) 0,
+								(byte) (dateTimeEnd.get(Calendar.YEAR) % 100),
+								(byte) (dateTimeEnd.get(Calendar.MONTH) + 1),
+								(byte) dateTimeEnd.get(Calendar.DAY_OF_MONTH),
+								(byte) dateTimeEnd.get(Calendar.HOUR_OF_DAY), (byte) dateTimeEnd.get(Calendar.MINUTE),
+								(byte) 0 });
+				new Thread(homeFragment.sendBytesThread).start();
 			}
 		});
 	}
@@ -154,7 +178,8 @@ public class GetDateAndTimeWindow extends PopupWindow {
 	 * 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 	 */
 
-	public static void showDatePickerDialog(Activity activity, int themeResId, final TextView tv, Calendar calendar) {
+	public static void showDatePickerDialog(Activity activity, int themeResId, final TextView tv,
+			final Calendar calendar) {
 		// 直接创建一个DatePickerDialog对话框实例，并将它显示出来
 		new DatePickerDialog(activity, themeResId
 		// 绑定监听器(How the parent is notified that the date is set.)
@@ -162,6 +187,7 @@ public class GetDateAndTimeWindow extends PopupWindow {
 					@Override
 					public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 						// 此处得到选择的时间，可以进行你想要的操作
+						calendar.set(year, monthOfYear, dayOfMonth);
 						tv.setText(year + "/" + ++monthOfYear + "/" + dayOfMonth);
 					}
 				}
@@ -170,7 +196,8 @@ public class GetDateAndTimeWindow extends PopupWindow {
 						.show();
 	}
 
-	public static void showTimePickerDialog(Activity activity, int themeResId, final TextView tv, Calendar calendar) {
+	public static void showTimePickerDialog(Activity activity, int themeResId, final TextView tv,
+			final Calendar calendar) {
 		// Calendar c = Calendar.getInstance();
 		// 创建一个TimePickerDialog实例，并把它显示出来
 		// 解释一哈，Activity是context的子类
@@ -179,7 +206,10 @@ public class GetDateAndTimeWindow extends PopupWindow {
 				new TimePickerDialog.OnTimeSetListener() {
 					@Override
 					public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-						tv.setText(hourOfDay + ":" + minute);
+						calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+								calendar.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
+						tv.setText(String.format("%2d", hourOfDay).replace(" ", "0") + ":"
+								+ String.format("%2d", minute).replace(" ", "0"));
 					}
 				}
 				// 设置初始时间
@@ -223,4 +253,9 @@ public class GetDateAndTimeWindow extends PopupWindow {
 	public void setActivity(Activity ac) {
 		activity = ac;
 	}
+
+	public void setTerminalNo(int value) {
+		terminalNo = value;
+	}
+
 }

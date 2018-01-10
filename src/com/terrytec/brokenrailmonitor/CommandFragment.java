@@ -230,15 +230,15 @@ public class CommandFragment extends Fragment {
 			case UploadConfig:
 				return "上传终端配置文件";
 			case ReadPointInfo:
-				return "读取单点配置信息";
+				return "单点配置信息";
 			case GetPointRailInfo:
-				return "获取单点铁轨信息";
+				return "单点铁轨信息";
 			case ConfigInitialInfo:
 				return "初始信息配置";
 			case ThresholdSetting:
 				return "设置门限";
 			case GetHistory:
-				return "获取历史信息";
+				return "历史信息";
 			case ImmediatelyRespond:
 				switch (CommandType.valueOf(data[7] & 0xFF)) {
 				case ConfigInitialInfo:
@@ -263,7 +263,7 @@ public class CommandFragment extends Fragment {
 			case RealTimeConfig:
 				return "实时时钟配置";
 			case GetOneSectionInfo:
-				return "获取某段铁轨信息";
+				return "某段铁轨信息";
 			case EraseFlash:
 				return "擦除flash";
 			case ErrorReport:

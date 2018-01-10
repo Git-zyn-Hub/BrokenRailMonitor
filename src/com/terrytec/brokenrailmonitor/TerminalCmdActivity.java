@@ -142,6 +142,7 @@ public class TerminalCmdActivity extends Activity {
 			}
 			LayoutInflater inflater = getLayoutInflater();
 			gdTimeWindow.setLayoutInflater(inflater);
+			gdTimeWindow.setTerminalNo(terminalNo);
 			gdTimeWindow = gdTimeWindow.getGetDateAndTimeWindow();
 			gdTimeWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
 		}
