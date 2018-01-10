@@ -21,6 +21,7 @@ import com.terrytec.brokenrailmonitor.classes.MacAddress;
 import com.terrytec.brokenrailmonitor.classes.SendDataPackage;
 import com.terrytec.brokenrailmonitor.windows.ConfigInitInfoWindow;
 import com.terrytec.brokenrailmonitor.windows.PasswordWindow;
+import com.terrytec.brokenrailmonitor.windows.PointConfigInfoWindow;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -465,6 +466,9 @@ public class HomeFragment extends Fragment {
 										break;
 									case ConfigInitialInfoPassword:
 										handleConfigInitialInfoPassword(receivedBytes);
+										break;
+									case ReadPointInfo:
+										handleReadPointInfo(receivedBytes);
 										break;
 									default:
 										break;
@@ -1112,6 +1116,66 @@ public class HomeFragment extends Fragment {
 				}
 			}
 		}
+	}
+
+	private void handleReadPointInfo(byte[] data) {
+		int terminalNo = data[7];
+		int count = terminalAnd2Rails.size();
+
+		int index = FindMasterControlIndex(terminalNo);
+		if (index != -1) {
+			if (index == 0 || index == 1) {
+				if (0 != data[8]) {
+					AppendMessage(terminalNo + "号终端次级相邻小终端不为0！终端没有次级相邻小终端应填0", DataLevel.Error);
+				}
+			} else {
+				if (terminalAnd2Rails.get(index - 1).neighbourSmall != data[8]) {
+					AppendMessage(
+							terminalNo + "号终端次级相邻小终端不匹配！config.xml配置文件中为"
+									+ terminalAnd2Rails.get(index - 1).neighbourSmall + "收到的为" + data[8],
+							DataLevel.Error);
+				}
+			}
+			if (terminalAnd2Rails.get(index).neighbourSmall != data[9]) {
+				AppendMessage(terminalNo + "号终端相邻小终端不匹配！config.xml配置文件中为" + terminalAnd2Rails.get(index).neighbourSmall
+						+ "收到的为" + data[9], DataLevel.Error);
+			}
+			if (terminalAnd2Rails.get(index).neighbourBig != data[10]) {
+				AppendMessage(terminalNo + "号终端相邻大终端不匹配！config.xml配置文件中为" + terminalAnd2Rails.get(index).neighbourBig
+						+ "收到的为" + data[10], DataLevel.Error);
+			}
+			if (index == count - 2 || index == count - 1) {
+				if (0xff != data[11]) {
+					AppendMessage(terminalNo + "号终端次级相邻大终端不为255！终端没有次级相邻大终端应填255", DataLevel.Error);
+				}
+			} else {
+				if (terminalAnd2Rails.get(index + 1).neighbourBig != data[11]) {
+					AppendMessage(
+							terminalNo + "号终端次级相邻大终端不匹配！config.xml配置文件中为"
+									+ terminalAnd2Rails.get(index + 1).neighbourBig + "收到的为" + data[11],
+							DataLevel.Error);
+				}
+			}
+
+			boolean flashIsValid = false;
+			if (data[12] == 1) {
+				flashIsValid = true;
+			} else if (data[12] == 0) {
+				flashIsValid = false;
+			} else {
+				AppendMessage("‘Flash是否有效’字段收到未定义数据。按照无效处理！", DataLevel.Error);
+			}
+			PointConfigInfoWindow pConfigInfoWindow = new PointConfigInfoWindow(terminalNo, data[8], data[9], data[10],
+					data[11], flashIsValid);
+			pConfigInfoWindow.setLayoutInflater(inflaterGlobal);
+
+			if (CurrentActivity != null) {
+				pConfigInfoWindow = pConfigInfoWindow.getPointConfigInfoWindow();
+				pConfigInfoWindow.showAtLocation(CurrentActivity.getWindow().getDecorView(), Gravity.CENTER, 0, 0);
+			}
+		} else
+			AppendMessage(terminalNo + "号终端不存在", DataLevel.Error);
+
 	}
 
 	private int setMasterCtrlTemperature(byte tempe) {

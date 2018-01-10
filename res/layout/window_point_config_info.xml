@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="500dp"
+    android:layout_height="400dp"
+    android:background="@android:color/darker_gray"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/PointConfigInfo" />
+
+    <TextView
+        android:id="@+id/tvTerminalNoOfConfig"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="7dp"
+        android:background="@color/white"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginTop="2dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="top"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginTop="7dp"
+                android:text="@string/NeighbourSmallSecondary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="@string/neighbourSmall" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="@string/neighbourBig" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="@string/NeighbourBigSecondary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="@string/flashValidOrNot" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="top"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tvNeighbourSmallSecondary"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:labelFor="@id/etNeighbourSmallSecondary"
+                android:paddingBottom="0dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:paddingTop="0dp" />
+
+            <TextView
+                android:id="@+id/tvNeighbourSmallPrimary"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:labelFor="@id/etNeighbourSmallPrimary"
+                android:paddingBottom="0dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:paddingTop="0dp" />
+
+            <TextView
+                android:id="@+id/tvNeighbourBigPrimary"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:labelFor="@id/etNeighbourBigPrimary"
+                android:paddingBottom="0dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:paddingTop="0dp" />
+
+            <TextView
+                android:id="@+id/tvNeighbourBigSecondary"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:labelFor="@id/etNeighbourBigSecondary"
+                android:paddingBottom="0dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:paddingTop="0dp" />
+
+            <TextView
+                android:id="@+id/tvFlashValidOrNot"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:labelFor="@id/etThisTerminal"
+                android:paddingBottom="0dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:paddingTop="0dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnOK"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="7dp"
+        android:background="@drawable/button_background"
+        android:text="@string/ok" />
+
+</LinearLayout>
