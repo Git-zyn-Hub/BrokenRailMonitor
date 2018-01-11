@@ -49,5 +49,6 @@
     <string name="inputTimeEnd">选择结束时间</string>
     <string name="PointConfigInfo">单点配置信息</string>
     <string name="flashValidOrNot">Flash是否有效</string>
+    <string name="ToNow">到现在</string>
 
 </resources>

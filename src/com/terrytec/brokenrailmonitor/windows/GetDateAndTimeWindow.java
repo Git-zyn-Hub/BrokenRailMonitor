@@ -75,6 +75,12 @@ public class GetDateAndTimeWindow extends PopupWindow {
 		tvTimeStart = (TextView) popupWindow_view.findViewById(R.id.tvTimeStart);
 		tvDateEnd = (TextView) popupWindow_view.findViewById(R.id.tvDateEnd);
 		tvTimeEnd = (TextView) popupWindow_view.findViewById(R.id.tvTimeEnd);
+
+		tvDateStart.setTag("起始日期");
+		tvTimeStart.setTag("起始时间");
+		tvDateEnd.setTag("结束日期");
+		tvTimeEnd.setTag("结束时间");
+
 		gdTimeWindow.setTvDateStart(tvDateStart);
 		gdTimeWindow.setTvTimeStart(tvTimeStart);
 		gdTimeWindow.setTvDateEnd(tvDateEnd);
@@ -152,6 +158,23 @@ public class GetDateAndTimeWindow extends PopupWindow {
 					Toast.makeText(MainActivity.getMainActivity(), "请先连接！", Toast.LENGTH_LONG).show();
 					return;
 				}
+
+				if (TextViewIsEmpty(gdTimeWindow.getTvDateStart()) || TextViewIsEmpty(gdTimeWindow.getTvTimeStart())
+						|| TextViewIsEmpty(gdTimeWindow.getTvDateEnd())
+						|| TextViewIsEmpty(gdTimeWindow.getTvTimeEnd())) {
+					return;
+				}
+				
+				dateTimeStart.set(Calendar.SECOND, 0);
+				dateTimeStart.set(Calendar.MILLISECOND, 0);
+				dateTimeEnd.set(Calendar.SECOND, 0);
+				dateTimeEnd.set(Calendar.MILLISECOND, 0);
+				
+				if (dateTimeStart.compareTo(dateTimeEnd) >= 0) {
+					Toast.makeText(MainActivity.getMainActivity(), "结束时间必须晚于开始时间", Toast.LENGTH_LONG).show();
+					return;
+				}
+
 				homeFragment.sendBytesBuffer = SendDataPackage.PackageSendData(
 						(byte) MainActivity.getMainActivity().ClientID, (byte) terminalNo,
 						(byte) CommandType.GetHistory.getValue(),
@@ -166,6 +189,20 @@ public class GetDateAndTimeWindow extends PopupWindow {
 								(byte) dateTimeEnd.get(Calendar.HOUR_OF_DAY), (byte) dateTimeEnd.get(Calendar.MINUTE),
 								(byte) 0 });
 				new Thread(homeFragment.sendBytesThread).start();
+			}
+		});
+
+		final Button btnToNow = (Button) popupWindow_view.findViewById(R.id.btnToNow);
+		btnToNow.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				dateTimeEnd = Calendar.getInstance();
+				gdTimeWindow.getTvDateEnd().setText(dateTimeEnd.get(Calendar.YEAR) + "/"
+						+ (dateTimeEnd.get(Calendar.MONTH) + 1) + "/" + dateTimeEnd.get(Calendar.DAY_OF_MONTH));
+				gdTimeWindow.getTvTimeEnd()
+						.setText(String.format("%2d", dateTimeEnd.get(Calendar.HOUR_OF_DAY)).replace(" ", "0") + ":"
+								+ String.format("%2d", dateTimeEnd.get(Calendar.MINUTE)).replace(" ", "0"));
 			}
 		});
 	}
@@ -216,6 +253,14 @@ public class GetDateAndTimeWindow extends PopupWindow {
 				, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)
 				// true表示采用24小时制
 				, true).show();
+	}
+
+	private boolean TextViewIsEmpty(TextView tv) {
+		boolean isEmpty = tv.getText().equals("");
+		if (isEmpty) {
+			Toast.makeText(MainActivity.getMainActivity(), "请选择" + tv.getTag().toString(), Toast.LENGTH_LONG).show();
+		}
+		return isEmpty;
 	}
 
 	private void setTvDateStart(TextView tView) {
