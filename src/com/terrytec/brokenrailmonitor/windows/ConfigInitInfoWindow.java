@@ -116,6 +116,10 @@ public class ConfigInitInfoWindow extends PopupWindow {
 
 			@Override
 			public void onClick(View v) {
+				if (!homeFragment.getIsConnect()) {
+					Toast.makeText(MainActivity.getMainActivity(), "«Îœ»¡¨Ω”£°", Toast.LENGTH_LONG).show();
+					return;
+				}
 				if (isEmpty(ciiWindow.getEtNeighbourSmallSecondary(),
 						homeFragment.getResources().getString(R.string.NeighbourSmallSecondary))
 						|| isEmpty(ciiWindow.getEtNeighbourSmallPrimary(),
