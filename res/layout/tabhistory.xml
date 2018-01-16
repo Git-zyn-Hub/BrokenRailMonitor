@@ -10,7 +10,7 @@
         android:gravity="center"
         title:title_background_color="@color/systemcolor"
         title:left_button_visible="false"
-        title:title_text="@string/history"
+        title:title_text="@string/data"
         title:title_text_color="@color/white"
         >
         
@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="@string/history"
+        android:text="@string/data"
         android:textSize="30sp">
         
     </TextView>

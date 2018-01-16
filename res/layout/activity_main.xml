@@ -116,7 +116,7 @@
            	    android:id="@+id/tvHistory"
            	    android:layout_width="wrap_content"
            	    android:layout_height="wrap_content"
-           	    android:text="@string/history"
+           	    android:text="@string/data"
            	    android:textColor="@drawable/tab_textview" />
         </LinearLayout>
     </LinearLayout>
