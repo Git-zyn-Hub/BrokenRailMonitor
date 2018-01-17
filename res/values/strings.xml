@@ -51,5 +51,14 @@
     <string name="PointConfigInfo">单点配置信息</string>
     <string name="flashValidOrNot">Flash是否有效</string>
     <string name="ToNow">到现在</string>
+    <string name="Temperature">温度</string>
+    <string name="Rail1ThisAmplitude">轨1本\n端幅值</string>
+    <string name="Rail2ThisAmplitude">轨2本\n端幅值</string>
+    <string name="Rail1Stress">轨1\n应力</string>
+    <string name="Rail2Stress">轨2\n应力</string>
+    <string name="Rail1LeftSignalAmplitude">轨1左\n信号\n幅值</string>
+    <string name="Rail1RightSignalAmplitude">轨1右\n信号\n幅值</string>
+    <string name="Rail2LeftSignalAmplitude">轨2左\n信号\n幅值</string>
+    <string name="Rail2RightSignalAmplitude">轨2右\n信号\n幅值</string>
 
 </resources>

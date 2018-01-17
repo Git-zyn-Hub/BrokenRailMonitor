@@ -1,26 +1,131 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-   	xmlns:title="http://schemas.android.com/apk/res/com.terrytec.brokenrailmonitor"
+    xmlns:title="http://schemas.android.com/apk/res/com.terrytec.brokenrailmonitor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" >
+
     <com.terrytec.brokenrailmonitor.CustomTitleBar
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:gravity="center"
-        title:title_background_color="@color/systemcolor"
         title:left_button_visible="false"
+        title:title_background_color="@color/systemcolor"
         title:title_text="@string/data"
-        title:title_text_color="@color/white"
-        >
-        
+        title:title_text_color="@color/white" >
     </com.terrytec.brokenrailmonitor.CustomTitleBar>
-    <TextView
+
+    <lecho.lib.hellocharts.view.LineChartView
+        android:id="@+id/chart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/data"
-        android:textSize="30sp">
-        
-    </TextView>
+        android:layout_height="0dp"
+        android:background="#ffffffff" />
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white"
+        android:baselineAligned="false"
+        android:columnCount="9"
+        android:orientation="horizontal"
+        android:rowCount="1" >
+
+        <TextView
+            android:id="@+id/tvTemperature"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="1dp"
+            android:background="@color/buttoncolor"
+            android:text="@string/Temperature"
+            android:textColor="@drawable/tab_textview" />
+
+        <TextView
+            android:id="@+id/tvRail1ThisAmplitude"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="1dp"
+            android:background="@color/buttoncolor"
+            android:text="@string/Rail1ThisAmplitude"
+            android:textColor="@drawable/tab_textview" />
+
+        <TextView
+            android:id="@+id/tvRail2ThisAmplitude"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="1dp"
+            android:background="@color/buttoncolor"
+            android:text="@string/Rail2ThisAmplitude"
+            android:textColor="@drawable/tab_textview" />
+
+        <TextView
+            android:id="@+id/tvRail1Stress"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="1dp"
+            android:background="@color/buttoncolor"
+            android:text="@string/Rail1Stress"
+            android:textColor="@drawable/tab_textview" />
+
+        <TextView
+            android:id="@+id/tvRail2Stress"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="1dp"
+            android:background="@color/buttoncolor"
+            android:text="@string/Rail2Stress"
+            android:textColor="@drawable/tab_textview" />
+
+        <TextView
+            android:id="@+id/tvRail1LeftSignalAmplitude"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="1dp"
+            android:background="@color/buttoncolor"
+            android:text="@string/Rail1LeftSignalAmplitude"
+            android:textColor="@drawable/tab_textview" />
+
+        <TextView
+            android:id="@+id/tvRail1RightSignalAmplitude"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="1dp"
+            android:background="@color/buttoncolor"
+            android:text="@string/Rail1RightSignalAmplitude"
+            android:textColor="@drawable/tab_textview" />
+
+        <TextView
+            android:id="@+id/tvRail2LeftSignalAmplitude"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="1dp"
+            android:background="@color/buttoncolor"
+            android:text="@string/Rail2LeftSignalAmplitude"
+            android:textColor="@drawable/tab_textview" />
+
+        <TextView
+            android:id="@+id/tvRail2RightSignalAmplitude"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:background="@color/buttoncolor"
+            android:text="@string/Rail2RightSignalAmplitude"
+            android:textColor="@drawable/tab_textview" />
+    </GridLayout>
+
+    <com.terrytec.brokenrailmonitor.MyViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+    </com.terrytec.brokenrailmonitor.MyViewPager>
+
 </LinearLayout>
