@@ -3,6 +3,7 @@ package com.terrytec.brokenrailmonitor;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.terrytec.brokenrailmonitor.datafragments.BaseFragment;
 import com.terrytec.brokenrailmonitor.datafragments.Rail1ThisAmplitudeFragment;
 import com.terrytec.brokenrailmonitor.datafragments.Rail2ThisAmplitudeFragment;
 import com.terrytec.brokenrailmonitor.datafragments.SignalAmplitudeFragment;
@@ -71,16 +72,26 @@ public class HistoryFragment extends Fragment implements OnClickListener {
 		// MyPagerAdapter adapter = new MyPagerAdapter(views);
 		// viewPager.setAdapter(adapter);
 
-		Fragment temperatureFragment = new TemperatureFragment(R.layout.fragment_temperature);
-		Fragment rail1ThisAmplitudeFragment = new Rail1ThisAmplitudeFragment(R.layout.fragment_rail1_this_amplitude);
-		Fragment rail2ThisAmplitudeFragment = new Rail2ThisAmplitudeFragment(R.layout.fragment_rail2_this_amplitude);
-		Fragment rail1StressFragment = new StressFragment(R.layout.fragment_stress);
-		Fragment rail2StressFragment = new StressFragment(R.layout.fragment_stress);
-		Fragment rail1LeftSignalAmplitudeFragment = new SignalAmplitudeFragment(R.layout.fragment_signal_amplitude);
-		Fragment rail1RightSignalAmplitudeFragment = new SignalAmplitudeFragment(R.layout.fragment_signal_amplitude);
-		Fragment rail2LeftSignalAmplitudeFragment = new SignalAmplitudeFragment(R.layout.fragment_signal_amplitude);
-		Fragment rail2RightSignalAmplitudeFragment = new SignalAmplitudeFragment(R.layout.fragment_signal_amplitude);
+		BaseFragment temperatureFragment = new TemperatureFragment(R.layout.fragment_chart);
+		BaseFragment rail1ThisAmplitudeFragment = new Rail1ThisAmplitudeFragment(R.layout.fragment_chart);
+		BaseFragment rail2ThisAmplitudeFragment = new Rail2ThisAmplitudeFragment(R.layout.fragment_chart);
+		BaseFragment rail1StressFragment = new StressFragment(R.layout.fragment_chart);
+		BaseFragment rail2StressFragment = new StressFragment(R.layout.fragment_chart);
+		BaseFragment rail1LeftSignalAmplitudeFragment = new SignalAmplitudeFragment(R.layout.fragment_chart);
+		BaseFragment rail1RightSignalAmplitudeFragment = new SignalAmplitudeFragment(R.layout.fragment_chart);
+		BaseFragment rail2LeftSignalAmplitudeFragment = new SignalAmplitudeFragment(R.layout.fragment_chart);
+		BaseFragment rail2RightSignalAmplitudeFragment = new SignalAmplitudeFragment(R.layout.fragment_chart);
 
+		temperatureFragment.setTitle(getResources().getString(R.string.Temperature));
+		rail1ThisAmplitudeFragment.setTitle(getResources().getString(R.string.strRail1ThisAmplitude));
+		rail2ThisAmplitudeFragment.setTitle(getResources().getString(R.string.strRail2ThisAmplitude));
+		rail1StressFragment.setTitle(getResources().getString(R.string.strRail1Stress));
+		rail2StressFragment.setTitle(getResources().getString(R.string.strRail2Stress));
+		rail1LeftSignalAmplitudeFragment.setTitle(getResources().getString(R.string.strRail1LeftSignalAmplitude));
+		rail1RightSignalAmplitudeFragment.setTitle(getResources().getString(R.string.strRail1RightSignalAmplitude));
+		rail2LeftSignalAmplitudeFragment.setTitle(getResources().getString(R.string.strRail2LeftSignalAmplitude));
+		rail2RightSignalAmplitudeFragment.setTitle(getResources().getString(R.string.strRail2RightSignalAmplitude));
+		
 		fragments.add(temperatureFragment);
 		fragments.add(rail1ThisAmplitudeFragment);
 		fragments.add(rail2ThisAmplitudeFragment);
@@ -144,7 +155,7 @@ public class HistoryFragment extends Fragment implements OnClickListener {
 			}
 
 		});
-		viewPager.setOffscreenPageLimit(2);
+		viewPager.setOffscreenPageLimit(9);
 	}
 
 	private void changeTab(int id) {

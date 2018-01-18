@@ -60,5 +60,13 @@
     <string name="Rail1RightSignalAmplitude">轨1右\n信号\n幅值</string>
     <string name="Rail2LeftSignalAmplitude">轨2左\n信号\n幅值</string>
     <string name="Rail2RightSignalAmplitude">轨2右\n信号\n幅值</string>
+    <string name="strRail1ThisAmplitude">轨1本端幅值</string>
+    <string name="strRail2ThisAmplitude">轨2本端幅值</string>
+    <string name="strRail1Stress">轨1应力</string>
+    <string name="strRail2Stress">轨2应力</string>
+    <string name="strRail1LeftSignalAmplitude">轨1左信号幅值</string>
+    <string name="strRail1RightSignalAmplitude">轨1右信号幅值</string>
+    <string name="strRail2LeftSignalAmplitude">轨2左信号幅值</string>
+    <string name="strRail2RightSignalAmplitude">轨2右信号幅值</string>
 
 </resources>

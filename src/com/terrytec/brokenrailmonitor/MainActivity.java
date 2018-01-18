@@ -141,6 +141,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	private void initView() {
 		viewPager = (MyViewPager) findViewById(R.id.viewPager);
+		viewPager.setNoScroll(true);
 		// LayoutInflater.from(this).inflate(R.id.ctbHomeTitle, viewPager,
 		// true);
 

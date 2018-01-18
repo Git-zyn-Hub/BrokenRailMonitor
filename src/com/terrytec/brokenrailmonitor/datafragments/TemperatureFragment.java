@@ -41,7 +41,7 @@ public class TemperatureFragment extends BaseFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		vTempe = inflater.inflate(R.layout.fragment_temperature, container, false);
+		vTempe = super.onCreateView(inflater, container, savedInstanceState);
 
 		List<PointValue> values = new ArrayList<PointValue>();
 		values.add(new PointValue(0, 2));
@@ -91,7 +91,7 @@ public class TemperatureFragment extends BaseFragment {
 		data.setValueLabelBackgroundEnabled(false);
 		data.setValueLabelsTextColor(Color.BLUE);
 
-		LineChartView chart = (LineChartView) vTempe.findViewById(R.id.lcvTemperature);
+		LineChartView chart = (LineChartView) vTempe.findViewById(R.id.lcvChart);
 		chart.setLineChartData(data);
 
 		// ◊¯±Í÷·
@@ -144,7 +144,6 @@ public class TemperatureFragment extends BaseFragment {
 		chart.setContainerScrollEnabled(true, ContainerScrollType.HORIZONTAL);
 		return vTempe;
 	}
-	
 
 	/**
 	 * X ÷·µƒœ‘ æ
