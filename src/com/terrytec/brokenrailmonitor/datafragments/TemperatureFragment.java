@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.terrytec.brokenrailmonitor.R;
 
+import android.R.string;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -65,7 +66,7 @@ public class TemperatureFragment extends BaseFragment {
 		values.add(new PointValue(18, 4));
 		values.add(new PointValue(19, 4));
 		values.add(new PointValue(20, 4));
-
+		
 		for (PointValue pointValue : values) {
 			pointValue.setLabel(pointValue.getY() + "¡æ");
 		}

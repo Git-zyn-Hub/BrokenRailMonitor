@@ -2,7 +2,6 @@ package com.terrytec.brokenrailmonitor.datafragments;
 
 import com.terrytec.brokenrailmonitor.R;
 
-import android.R.string;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;

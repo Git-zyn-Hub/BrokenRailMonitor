@@ -541,18 +541,23 @@ public class HomeFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.e("zyn", this.getClass().getName() + " onCreateView");
-		inflaterGlobal = inflater;
-		vTabHome = inflater.inflate(R.layout.tabhome, container, false);
-		btnUpload = (Button) vTabHome.findViewById(R.id.btnUpload);
-		btnDownload = (Button) vTabHome.findViewById(R.id.btnDownload);
-		btnUpload.setOnClickListener(btnUploadListener);
-		btnDownload.setOnClickListener(btnDownloadListener);
-		freshDevices();
-		// 点击按钮弹出菜单
-		Button pop = (Button) vTabHome.findViewById(R.id.btnPop);
-		pop.setOnClickListener(popClick);
-		new Thread(getInetAddressThread).start();
-		return vTabHome;
+		try {
+			inflaterGlobal = inflater;
+			vTabHome = inflater.inflate(R.layout.tabhome, container, false);
+			btnUpload = (Button) vTabHome.findViewById(R.id.btnUpload);
+			btnDownload = (Button) vTabHome.findViewById(R.id.btnDownload);
+			btnUpload.setOnClickListener(btnUploadListener);
+			btnDownload.setOnClickListener(btnDownloadListener);
+			freshDevices();
+			// 点击按钮弹出菜单
+			Button pop = (Button) vTabHome.findViewById(R.id.btnPop);
+			pop.setOnClickListener(popClick);
+			new Thread(getInetAddressThread).start();
+			return vTabHome;
+		} catch (Exception e) {
+			Toast.makeText(MainActivity.getMainActivity(), "主页创建异常！", Toast.LENGTH_LONG).show();
+			return null;
+		}
 	}
 
 	public static String GetInetAddress(String host) {
