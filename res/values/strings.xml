@@ -68,5 +68,6 @@
     <string name="strRail1RightSignalAmplitude">轨1右信号幅值</string>
     <string name="strRail2LeftSignalAmplitude">轨2左信号幅值</string>
     <string name="strRail2RightSignalAmplitude">轨2右信号幅值</string>
+    <string name="test">测试</string>
 
 </resources>

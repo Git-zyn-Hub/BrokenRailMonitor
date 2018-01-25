@@ -10,12 +10,14 @@ import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Calendar;
 import java.util.List;
 
 import com.terrytec.brokenrailmonitor.Enums.CommandType;
 import com.terrytec.brokenrailmonitor.Enums.DataLevel;
 import com.terrytec.brokenrailmonitor.classes.DensityUtil;
 import com.terrytec.brokenrailmonitor.classes.FileOperate;
+import com.terrytec.brokenrailmonitor.classes.FileRailInfoXmlParser;
 import com.terrytec.brokenrailmonitor.classes.FileServer;
 import com.terrytec.brokenrailmonitor.classes.MacAddress;
 import com.terrytec.brokenrailmonitor.classes.SendDataPackage;
@@ -38,15 +40,15 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+//import android.widget.Toast;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
-//import android.widget.Toast;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 
 public class HomeFragment extends Fragment {
 
@@ -688,6 +690,19 @@ public class HomeFragment extends Fragment {
 				} catch (Exception e) {
 					e.getStackTrace();
 				}
+			}
+		});
+
+		final Button btnTest = (Button) popupWindow_view.findViewById(R.id.btnTest);
+		btnTest.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				FileRailInfoXmlParser xmlParser = new FileRailInfoXmlParser(1);
+				Calendar calendar = Calendar.getInstance();
+				calendar.set(2018, 1, 20);
+				xmlParser.setDateAndPath(calendar);
+				xmlParser.createXml();
 			}
 		});
 	}
