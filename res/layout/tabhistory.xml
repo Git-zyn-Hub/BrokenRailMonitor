@@ -31,91 +31,82 @@
         android:orientation="horizontal"
         android:rowCount="1" >
 
-        <TextView
+        <com.terrytec.brokenrailmonitor.classes.CenterTextView
             android:id="@+id/tvTemperature"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
             android:layout_marginEnd="1dp"
             android:background="@color/buttoncolor"
             android:text="@string/Temperature"
             android:textColor="@drawable/tab_textview" />
 
-        <TextView
+        <com.terrytec.brokenrailmonitor.classes.CenterTextView
             android:id="@+id/tvRail1ThisAmplitude"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_gravity="center_vertical"
             android:layout_marginEnd="1dp"
             android:background="@color/buttoncolor"
             android:text="@string/Rail1ThisAmplitude"
             android:textColor="@drawable/tab_textview" />
 
-        <TextView
+        <com.terrytec.brokenrailmonitor.classes.CenterTextView
             android:id="@+id/tvRail2ThisAmplitude"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_gravity="center_vertical"
             android:layout_marginEnd="1dp"
             android:background="@color/buttoncolor"
             android:text="@string/Rail2ThisAmplitude"
             android:textColor="@drawable/tab_textview" />
 
-        <TextView
+        <com.terrytec.brokenrailmonitor.classes.CenterTextView
             android:id="@+id/tvRail1Stress"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_gravity="center_vertical"
             android:layout_marginEnd="1dp"
             android:background="@color/buttoncolor"
             android:text="@string/Rail1Stress"
             android:textColor="@drawable/tab_textview" />
 
-        <TextView
+        <com.terrytec.brokenrailmonitor.classes.CenterTextView
             android:id="@+id/tvRail2Stress"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_gravity="center_vertical"
             android:layout_marginEnd="1dp"
             android:background="@color/buttoncolor"
             android:text="@string/Rail2Stress"
             android:textColor="@drawable/tab_textview" />
 
-        <TextView
+        <com.terrytec.brokenrailmonitor.classes.CenterTextView
             android:id="@+id/tvRail1LeftSignalAmplitude"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_gravity="center_vertical"
             android:layout_marginEnd="1dp"
             android:background="@color/buttoncolor"
             android:text="@string/Rail1LeftSignalAmplitude"
             android:textColor="@drawable/tab_textview" />
 
-        <TextView
+        <com.terrytec.brokenrailmonitor.classes.CenterTextView
             android:id="@+id/tvRail1RightSignalAmplitude"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_gravity="center_vertical"
             android:layout_marginEnd="1dp"
             android:background="@color/buttoncolor"
             android:text="@string/Rail1RightSignalAmplitude"
             android:textColor="@drawable/tab_textview" />
 
-        <TextView
+        <com.terrytec.brokenrailmonitor.classes.CenterTextView
             android:id="@+id/tvRail2LeftSignalAmplitude"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_gravity="center_vertical"
             android:layout_marginEnd="1dp"
             android:background="@color/buttoncolor"
             android:text="@string/Rail2LeftSignalAmplitude"
             android:textColor="@drawable/tab_textview" />
 
-        <TextView
+        <com.terrytec.brokenrailmonitor.classes.CenterTextView
             android:id="@+id/tvRail2RightSignalAmplitude"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_gravity="center_vertical"
             android:background="@color/buttoncolor"
             android:text="@string/Rail2RightSignalAmplitude"
             android:textColor="@drawable/tab_textview" />

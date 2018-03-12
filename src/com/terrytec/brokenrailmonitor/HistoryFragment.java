@@ -3,6 +3,7 @@ package com.terrytec.brokenrailmonitor;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.terrytec.brokenrailmonitor.classes.CenterTextView;
 import com.terrytec.brokenrailmonitor.datafragments.BaseFragment;
 import com.terrytec.brokenrailmonitor.datafragments.Rail1ThisAmplitudeFragment;
 import com.terrytec.brokenrailmonitor.datafragments.Rail2ThisAmplitudeFragment;
@@ -34,7 +35,7 @@ import lecho.lib.hellocharts.view.LineChartView;
 
 public class HistoryFragment extends Fragment implements OnClickListener {
 	private View vTabData;
-	private TextView tvTemperature, tvRail1ThisAmplitude, tvRail2ThisAmplitude, tvRail1Stress, tvRail2Stress,
+	private CenterTextView tvTemperature, tvRail1ThisAmplitude, tvRail2ThisAmplitude, tvRail1Stress, tvRail2Stress,
 			tvRail1LeftSignalAmplitude, tvRail1RightSignalAmplitude, tvRail2LeftSignalAmplitude,
 			tvRail2RightSignalAmplitude, tvCurrent;
 	private List<Fragment> fragments = new ArrayList<Fragment>();
@@ -114,15 +115,15 @@ public class HistoryFragment extends Fragment implements OnClickListener {
 	private void initView() {
 		viewPager = (MyViewPager) vTabData.findViewById(R.id.viewPagerData);
 
-		tvTemperature = (TextView) vTabData.findViewById(R.id.tvTemperature);
-		tvRail1ThisAmplitude = (TextView) vTabData.findViewById(R.id.tvRail1ThisAmplitude);
-		tvRail2ThisAmplitude = (TextView) vTabData.findViewById(R.id.tvRail2ThisAmplitude);
-		tvRail1Stress = (TextView) vTabData.findViewById(R.id.tvRail1Stress);
-		tvRail2Stress = (TextView) vTabData.findViewById(R.id.tvRail2Stress);
-		tvRail1LeftSignalAmplitude = (TextView) vTabData.findViewById(R.id.tvRail1LeftSignalAmplitude);
-		tvRail1RightSignalAmplitude = (TextView) vTabData.findViewById(R.id.tvRail1RightSignalAmplitude);
-		tvRail2LeftSignalAmplitude = (TextView) vTabData.findViewById(R.id.tvRail2LeftSignalAmplitude);
-		tvRail2RightSignalAmplitude = (TextView) vTabData.findViewById(R.id.tvRail2RightSignalAmplitude);
+		tvTemperature = (CenterTextView) vTabData.findViewById(R.id.tvTemperature);
+		tvRail1ThisAmplitude = (CenterTextView) vTabData.findViewById(R.id.tvRail1ThisAmplitude);
+		tvRail2ThisAmplitude = (CenterTextView) vTabData.findViewById(R.id.tvRail2ThisAmplitude);
+		tvRail1Stress = (CenterTextView) vTabData.findViewById(R.id.tvRail1Stress);
+		tvRail2Stress = (CenterTextView) vTabData.findViewById(R.id.tvRail2Stress);
+		tvRail1LeftSignalAmplitude = (CenterTextView) vTabData.findViewById(R.id.tvRail1LeftSignalAmplitude);
+		tvRail1RightSignalAmplitude = (CenterTextView) vTabData.findViewById(R.id.tvRail1RightSignalAmplitude);
+		tvRail2LeftSignalAmplitude = (CenterTextView) vTabData.findViewById(R.id.tvRail2LeftSignalAmplitude);
+		tvRail2RightSignalAmplitude = (CenterTextView) vTabData.findViewById(R.id.tvRail2RightSignalAmplitude);
 
 		tvTemperature.setOnClickListener(this);
 		tvRail1ThisAmplitude.setOnClickListener(this);
