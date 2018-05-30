@@ -153,12 +153,12 @@ public class TerminalAnd2Rails extends RelativeLayout {
 
 	public void setRailStressLeft(int value) {
 		TextView tvRailStressLeft = (TextView) this.findViewById(R.id.tvRailStressLeft);
-		tvRailStressLeft.setText(String.valueOf(value));
+		tvRailStressLeft.setText(String.valueOf((double) value / 100) + "MPa");
 	}
 
 	public void setRailStressRight(int value) {
 		TextView tvRailStressRight = (TextView) this.findViewById(R.id.tvRailStressRight);
-		tvRailStressRight.setText(String.valueOf(value));
+		tvRailStressRight.setText(String.valueOf((double) value / 100) + "MPa");
 	}
 
 	public void setRailTemperatureLeft(int value) {

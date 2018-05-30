@@ -26,7 +26,7 @@
 
     <LinearLayout
         android:id="@+id/llStressTempeLeft"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:orientation="vertical" >
@@ -34,12 +34,14 @@
         <TextView
             android:id="@+id/tvRailStressLeft"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="end" />
 
         <TextView
             android:id="@+id/tvRailTemperatureLeft"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" 
+            android:layout_gravity="end"/>
     </LinearLayout>
 
     <LinearLayout
@@ -113,7 +115,7 @@
 
     <LinearLayout
         android:id="@+id/llStressTempeRight"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:orientation="vertical" >

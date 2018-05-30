@@ -1138,6 +1138,7 @@ public class HomeFragment extends Fragment {
 		}
 	}
 
+	///读取单点配置信息。
 	private void handleReadPointInfo(byte[] data) {
 		int terminalNo = data[7];
 		int count = terminalAnd2Rails.size();
